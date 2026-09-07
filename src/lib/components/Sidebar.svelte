@@ -12,7 +12,7 @@
     <nav class="flex-1 overflow-y-auto">
         <ul class="menu menu-vertical gap-2 p-3 w-full">
             <li class="w-full">
-                <a class="btn btn-ghost w-full rounded-none " href={resolve('/')}><House /> Home</a>
+                <a class="btn btn-ghost w-full rounded-none font-normal" href={resolve('/')}><House /> Home</a>
             </li>
         </ul>
     </nav>
