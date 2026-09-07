@@ -8,29 +8,29 @@
             forest;
 }
 
-@font-face {
-    font-family: 'VicFont';
-    src: url('../lib/assets/fonts/VIC-Regular.ttf') format('ttf');
-    font-weight: 400;
-    font-style: normal;
-    font-display: swap;
-}
+/*@font-face {*/
+/*    font-family: 'VicFont';*/
+/*    src: url('../lib/assets/fonts/VIC-Regular.ttf') format('ttf');*/
+/*    font-weight: 400;*/
+/*    font-style: normal;*/
+/*    font-display: swap;*/
+/*}*/
 
-@font-face {
-    font-family: 'VicFont';
-    src: url('../lib/assets/fonts/VIC-SemiBold.ttf') format('ttf');
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-}
+/*@font-face {*/
+/*    font-family: 'VicFont';*/
+/*    src: url('../lib/assets/fonts/VIC-SemiBold.ttf') format('ttf');*/
+/*    font-weight: 600;*/
+/*    font-style: normal;*/
+/*    font-display: swap;*/
+/*}*/
 
-@font-face {
-    font-family: 'VicFont';
-    src: url('../lib/assets/fonts/VIC-Bold.ttf') format('ttf');
-    font-weight: 700;
-    font-style: normal;
-    font-display: swap;
-}
+/*@font-face {*/
+/*    font-family: 'VicFont';*/
+/*    src: url('../lib/assets/fonts/VIC-Bold.ttf') format('ttf');*/
+/*    font-weight: 700;*/
+/*    font-style: normal;*/
+/*    font-display: swap;*/
+/*}*/
 
 .noto-sans-thin {
     font-family: "Noto Sans", sans-serif;
@@ -73,5 +73,5 @@
 }
 
 body {
-    font-family: 'VicFont', sans-serif;
+    font-family: 'Noto Sans', sans-serif;
 }
