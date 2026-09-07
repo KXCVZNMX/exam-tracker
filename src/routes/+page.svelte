@@ -1,6 +1,8 @@
 <script lang="ts">
     import vcaa from "$lib/assets/vcaa.svg"
     import {Library} from "@lucide/svelte";
+    import {goto} from "$app/navigation";
+    import {resolve} from "$app/paths";
 </script>
 
 <div class="relative flex justify-center items-center min-h-screen">
@@ -31,7 +33,7 @@
             <button class="btn btn-primary grow noto-sans-bold hover:shadow-2xl shadow-neutral-800/50 transition-all duration-300">
                 Begin Your Pain
             </button>
-            <button class="btn ">
+            <button class="btn" onclick={() => goto(resolve('/(main)/subjects'))}>
                 <Library /> Subjects
             </button>
         </div>
