@@ -1,5 +1,5 @@
 <script>
-    import { EllipsisVertical, X } from 'lucide-svelte';
+    import { EllipsisVertical, X } from '@lucide/svelte';
 </script>
 
 <div class="card h-50 w-full min-w-0 rounded-lg bg-base-200">
