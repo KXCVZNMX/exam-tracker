@@ -1,7 +1,8 @@
 <script lang="ts">
     import VcaaNoText from "$lib/assets/vcaa_no_text.svg"
-    import {House, Library} from "@lucide/svelte";
+    import {House, Library, LogOut} from "@lucide/svelte";
     import {resolve} from "$app/paths";
+    import { authClient } from "$lib/auth-client";
 
     let { class: className = '' } = $props<{ class?: string }>();
 </script>
@@ -25,4 +26,7 @@
             </li>
         </ul>
     </nav>
+    <button class="btn btn-ghost m-3 justify-start rounded-none font-normal" onclick={() => authClient.signOut().then(() => window.location.href = resolve('/auth'))}>
+        <LogOut /> Sign out
+    </button>
 </aside>

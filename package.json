@@ -41,8 +41,10 @@
 		"vitest-browser-svelte": "^2.1.1"
 	},
 	"dependencies": {
+		"@better-auth/mongo-adapter": "^1.7.3",
 		"@lucide/svelte": "^1.41.0",
+		"better-auth": "^1.7.3",
 		"daisyui": "^5.7.28",
-		"lucide-svelte": "^1.0.1"
+		"mongodb": "^7.6.0"
 	}
 }
