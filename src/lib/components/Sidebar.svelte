@@ -1,32 +1,35 @@
 <script lang="ts">
-    import VcaaNoText from "$lib/assets/vcaa_no_text.svg"
-    import {House, Library, LogOut} from "@lucide/svelte";
-    import {resolve} from "$app/paths";
-    import { authClient } from "$lib/auth-client";
+	import VcaaNoText from '$lib/assets/vcaa_no_text.svg';
+	import { House, Library, LogOut } from '@lucide/svelte';
+	import { resolve } from '$app/paths';
+	import { authClient } from '$lib/auth-client';
 
-    let { class: className = '' } = $props<{ class?: string }>();
+	let { class: className = '' } = $props<{ class?: string }>();
 </script>
 
 <aside class={`sticky top-0 flex h-screen w-48 flex-col bg-base-200 shadow-xl ${className}`}>
-    <div class="flex justify-center py-3">
-        <img src={VcaaNoText} alt="VCAA logo" class="h-20 w-20 blur-[6px]" />
-    </div>
+	<div class="flex justify-center py-3">
+		<img src={VcaaNoText} alt="VCAA logo" class="h-20 w-20 blur-[6px]" />
+	</div>
 
-    <nav class="flex-1 overflow-y-auto">
-        <ul class="menu menu-vertical gap-2 p-3 w-full">
-            <li class="w-full">
-                <a class="btn btn-ghost w-full rounded-none font-normal" href={resolve('/')}>
-                    <House /> Home
-                </a>
-            </li>
-            <li class="w-full">
-                <a class="btn btn-ghost w-full rounded-none font-normal" href={resolve('/(main)/subjects')}>
-                    <Library /> Subjects
-                </a>
-            </li>
-        </ul>
-    </nav>
-    <button class="btn btn-ghost m-3 justify-start rounded-none font-normal" onclick={() => authClient.signOut().then(() => window.location.href = resolve('/'))}>
-        <LogOut /> Sign out
-    </button>
+	<nav class="flex-1 overflow-y-auto">
+		<ul class="menu menu-vertical w-full gap-2 p-3">
+			<li class="w-full">
+				<a class="btn w-full rounded-none btn-ghost font-normal" href={resolve('/')}>
+					<House /> Home
+				</a>
+			</li>
+			<li class="w-full">
+				<a class="btn w-full rounded-none btn-ghost font-normal" href={resolve('/(main)/subjects')}>
+					<Library /> Subjects
+				</a>
+			</li>
+		</ul>
+	</nav>
+	<button
+		class="btn m-3 justify-start rounded-none btn-ghost font-normal"
+		onclick={() => authClient.signOut().then(() => (window.location.href = resolve('/')))}
+	>
+		<LogOut /> Sign out
+	</button>
 </aside>
