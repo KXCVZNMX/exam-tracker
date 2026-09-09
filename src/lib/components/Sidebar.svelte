@@ -26,7 +26,7 @@
             </li>
         </ul>
     </nav>
-    <button class="btn btn-ghost m-3 justify-start rounded-none font-normal" onclick={() => authClient.signOut().then(() => window.location.href = resolve('/auth'))}>
+    <button class="btn btn-ghost m-3 justify-start rounded-none font-normal" onclick={() => authClient.signOut().then(() => window.location.href = resolve('/'))}>
         <LogOut /> Sign out
     </button>
 </aside>
