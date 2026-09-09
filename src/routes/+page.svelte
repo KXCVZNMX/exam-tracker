@@ -29,6 +29,7 @@
             Have fun on your exams
         </h2>
 
+        <!-- TODO: Make this a dropdown of login options when the user is not logged in-->
         <div class="flex gap-3">
             <button class="btn btn-primary grow noto-sans-bold hover:shadow-2xl shadow-neutral-800/50 transition-all duration-300">
                 Begin Your Pain
