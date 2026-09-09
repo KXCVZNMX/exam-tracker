@@ -1,6 +1,6 @@
 <script lang="ts">
     import VcaaNoText from "$lib/assets/vcaa_no_text.svg"
-    import {House} from "@lucide/svelte";
+    import {House, Library} from "@lucide/svelte";
     import {resolve} from "$app/paths";
 </script>
 
@@ -12,7 +12,14 @@
     <nav class="flex-1 overflow-y-auto">
         <ul class="menu menu-vertical gap-2 p-3 w-full">
             <li class="w-full">
-                <a class="btn btn-ghost w-full rounded-none font-normal" href={resolve('/')}><House /> Home</a>
+                <a class="btn btn-ghost w-full rounded-none font-normal" href={resolve('/')}>
+                    <House /> Home
+                </a>
+            </li>
+            <li class="w-full">
+                <a class="btn btn-ghost w-full rounded-none font-normal" href={resolve('/(main)/subjects')}>
+                    <Library /> Subjects
+                </a>
             </li>
         </ul>
     </nav>
