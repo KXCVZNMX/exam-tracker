@@ -28,11 +28,6 @@
 			<p class="text-md text-gray-300/70 italic">
 				This is a description does this wrap This is a description does this wrap This is a
 			</p>
-
-			<!--TODO: Make this a button to change colours -->
-			<div class="mt-auto flex flex-row gap-2">
-				<div class="size-4 rounded-sm" style="background-color: #de12ef"></div>
-			</div>
 		</div>
 	</div>
 </div>
