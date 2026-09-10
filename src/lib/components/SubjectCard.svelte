@@ -1,12 +1,17 @@
-<script>
+<script lang="ts">
 	import { EllipsisVertical, X } from '@lucide/svelte';
+	import {truncateByWidth} from "$lib/util/general";
+
+	let { title, description }: { title: string; description: string } = $props();
 </script>
 
 <div class="card h-50 w-full min-w-0 rounded-lg bg-base-200">
 	<div class="card-body">
 		<div class="flex h-full flex-col gap-2">
 			<div class="flex-between flex">
-				<p class="h-fit text-left text-2xl leading-none font-semibold max-block-6">Methods</p>
+				<p class="h-fit text-left text-2xl leading-none font-semibold max-block-6">
+					{truncateByWidth(title, 18)}
+				</p>
 
 				<!-- TODO: Button for editing subject info and deleting subject-->
 				<div class="flex flex-row gap-2 text-gray-300">
@@ -26,7 +31,7 @@
 			</div>
 
 			<p class="text-md text-gray-300/70 italic">
-				This is a description does this wrap This is a description does this wrap This is a
+				{truncateByWidth(description, 200)}
 			</p>
 		</div>
 	</div>

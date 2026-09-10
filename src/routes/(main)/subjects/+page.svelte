@@ -1,12 +1,15 @@
-<script>
+<script lang="ts">
 	import SubjectCard from '$lib/components/SubjectCard.svelte';
 	import { Plus } from '@lucide/svelte/icons';
-	import AddSubject from "$lib/components/modals/AddSubject.svelte";
+	import AddSubject from '$lib/components/modals/AddSubject.svelte';
+	import type { SubjectsContent } from "$lib/types/subjects";
+
+	let { data }: { data: SubjectsContent[] } = $props();
 
 	let showAddSubjectModal = $state(false);
 </script>
 
-<AddSubject bind:show={showAddSubjectModal}/>
+<AddSubject bind:show={showAddSubjectModal} />
 
 <div class="p-5">
 	<h1 class="pt-10 text-5xl font-bold">Subjects</h1>
@@ -15,7 +18,7 @@
 		<button
 			class="md:rounded-btn btn aspect-square rounded-full px-0 btn-md btn-primary md:aspect-auto md:px-4"
 			aria-label="Add Subjects"
-			onclick={() => showAddSubjectModal = true}
+			onclick={() => (showAddSubjectModal = true)}
 		>
 			<Plus />
 			<span class="hidden md:inline">Add Subjects</span>
@@ -23,8 +26,8 @@
 	</div>
 
 	<div class="grid w-full grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-		<SubjectCard />
-		<SubjectCard />
-		<SubjectCard />
+		{#each data as subject, i (i)}
+			<SubjectCard title={subject.name} description={subject.description || ''} />
+		{/each}
 	</div>
 </div>
