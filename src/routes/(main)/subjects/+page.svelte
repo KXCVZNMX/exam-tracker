@@ -1,7 +1,12 @@
 <script>
 	import SubjectCard from '$lib/components/SubjectCard.svelte';
 	import { Plus } from '@lucide/svelte/icons';
+	import AddSubject from "$lib/components/modals/AddSubject.svelte";
+
+	let showAddSubjectModal = $state(false);
 </script>
+
+<AddSubject bind:show={showAddSubjectModal}/>
 
 <div class="p-5">
 	<h1 class="pt-10 text-5xl font-bold">Subjects</h1>
@@ -10,6 +15,7 @@
 		<button
 			class="md:rounded-btn btn aspect-square rounded-full px-0 btn-md btn-primary md:aspect-auto md:px-4"
 			aria-label="Add Subjects"
+			onclick={() => showAddSubjectModal = true}
 		>
 			<Plus />
 			<span class="hidden md:inline">Add Subjects</span>
