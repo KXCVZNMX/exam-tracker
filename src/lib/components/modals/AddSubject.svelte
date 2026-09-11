@@ -31,8 +31,8 @@
 				submitting = true;
 				return async ({ update }) => {
 					submitting = false;
-					await update();
 					show = false;
+					await update();
 				}
 			}}
 		>
