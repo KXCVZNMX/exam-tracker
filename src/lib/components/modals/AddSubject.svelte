@@ -43,6 +43,7 @@
 					name="name"
 					class="input w-full"
 					placeholder="Methods, Physics, etc."
+					maxlength="50"
 					required
 				/>
 			</fieldset>
@@ -54,6 +55,7 @@
 					name="description"
 					class="input w-full"
 					placeholder="Your goals, aims, etc."
+					maxlength="400"
 				/>
 			</fieldset>
 
