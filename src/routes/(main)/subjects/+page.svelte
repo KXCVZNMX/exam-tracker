@@ -27,7 +27,7 @@
 
 	<div class="grid w-full grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
 		{#each data.subjects as subject (subject._id)}
-			<SubjectCard title={subject.name} description={subject.description || ''} />
+			<SubjectCard title={subject.name} description={subject.description || ''} subjectId={subject._id}/>
 		{/each}
 	</div>
 </div>

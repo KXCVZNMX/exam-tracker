@@ -2,6 +2,7 @@ import { error, type Actions, redirect } from '@sveltejs/kit';
 import db from '$lib/server/mongodb';
 import type { SubjectsContent } from '$lib/types/subjects';
 import type { PageServerLoad } from '../../../../.svelte-kit/types/src/routes/(main)/subjects/$types';
+import { deleteSubject } from '$lib/server/actions/subjects';
 
 export const actions: Actions = {
 	addSubject: async ({ request, locals }) => {
@@ -24,7 +25,8 @@ export const actions: Actions = {
 			description,
 			createdAt: new Date()
 		});
-	}
+	},
+	...deleteSubject,
 };
 
 export const load: PageServerLoad = async ({ locals }) => {
