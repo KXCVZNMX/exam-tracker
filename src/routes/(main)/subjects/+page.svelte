@@ -2,9 +2,9 @@
 	import SubjectCard from '$lib/components/SubjectCard.svelte';
 	import { Plus } from '@lucide/svelte/icons';
 	import AddSubject from '$lib/components/modals/AddSubject.svelte';
-	import type { SubjectsContent } from "$lib/types/subjects";
+	import type { PageData } from './$types';
 
-	let { data }: { data: SubjectsContent[] } = $props();
+	let { data }: { data: PageData } = $props();
 
 	let showAddSubjectModal = $state(false);
 </script>
@@ -26,7 +26,7 @@
 	</div>
 
 	<div class="grid w-full grid-cols-1 gap-3 md:grid-cols-2 lg:grid-cols-3">
-		{#each data as subject, i (i)}
+		{#each data.subjects as subject (subject._id)}
 			<SubjectCard title={subject.name} description={subject.description || ''} />
 		{/each}
 	</div>
