@@ -1,5 +1,5 @@
 import { describe, it, expect } from 'vitest';
-import { truncateByWidth } from '$lib/server/util/general.ts';
+import { truncateByWidth } from '$lib/util/general.ts';
 
 describe('truncateByWidth', () => {
 	it('returns the input unchanged when it fits', () => {
