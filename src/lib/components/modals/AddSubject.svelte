@@ -33,7 +33,7 @@
 					submitting = false;
 					show = false;
 					await update();
-				}
+				};
 			}}
 		>
 			<fieldset class="fieldset">

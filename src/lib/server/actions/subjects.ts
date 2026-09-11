@@ -1,4 +1,4 @@
-import  { type Actions, error } from '@sveltejs/kit';
+import { type Actions, error } from '@sveltejs/kit';
 import db from '$lib/server/mongodb';
 import type { SubjectsContent } from '$lib/types/subjects';
 import { ObjectId } from 'mongodb';

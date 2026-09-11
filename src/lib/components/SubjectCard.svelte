@@ -1,9 +1,10 @@
 <script lang="ts">
 	import { EllipsisVertical, X } from '@lucide/svelte';
-	import {truncateByWidth} from "$lib/util/general";
-	import {enhance} from "$app/forms";
+	import { truncateByWidth } from '$lib/util/general';
+	import { enhance } from '$app/forms';
 
-	let { title, description, subjectId }: { title: string; description: string; subjectId: string } = $props();
+	let { title, description, subjectId }: { title: string; description: string; subjectId: string } =
+		$props();
 
 	let deleting = $state(false);
 </script>
@@ -33,10 +34,10 @@
 							return async ({ update }) => {
 								deleting = false;
 								await update();
-							}
+							};
 						}}
 					>
-						<input type="hidden" name="id" value={subjectId}/>
+						<input type="hidden" name="id" value={subjectId} />
 
 						<!-- TODO: Make this have a warning-->
 						<button

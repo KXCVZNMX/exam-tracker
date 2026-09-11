@@ -26,12 +26,12 @@ export const actions: Actions = {
 			createdAt: new Date()
 		});
 	},
-	...deleteSubject,
+	...deleteSubject
 };
 
 export const load: PageServerLoad = async ({ locals }) => {
 	if (!locals.session) {
-		throw redirect(302, "/auth");
+		throw redirect(302, '/auth');
 	}
 
 	const subjects = await db
