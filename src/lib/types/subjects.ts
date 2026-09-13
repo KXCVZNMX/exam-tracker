@@ -17,9 +17,10 @@ export interface Exam {
 	company: string;
 	year: number;
 	completed: boolean;
-	partAMark: number;
-	partBMark: number;
-	partAFullMark: number;
-	partBFullMark: number;
+	sections: {
+		sectionNum: number;
+		sectionScore: number;
+		sectionFullScore: number;
+	}[];
 	comments: string[];
 }
