@@ -13,7 +13,7 @@
 
 <div
 	class="card h-50 w-full min-w-0 rounded-lg bg-base-200 hover:cursor-pointer hover:bg-base-300 transition-all duration-200"
-	onclick={goto(resolve(`/subjects/${subjectId}`))}
+	onclick={() => goto(resolve(`/subjects/${subjectId}`))}
 	aria-label="visit this subject"
 >
 	<div class="card-body">
