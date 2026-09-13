@@ -9,20 +9,22 @@ export const actions: Actions = {
 		const data = await request.formData();
 		const name = data.get('name')?.toString().trim();
 		const description = data.get('description')?.toString().trim() || '';
+		const numSections = data.get('sections')?.toString().trim();
 
 		const session = locals.session;
 		if (!session || !locals.user) {
 			throw error(403, 'Forbidden');
 		}
 
-		if (!name) {
-			throw error(400, 'Subject name is required');
+		if (!name || !numSections) {
+			throw error(400, 'Subject name and sections are required');
 		}
 
 		await db.collection<SubjectsContent>('subjects').insertOne({
 			userId: session.userId,
 			name,
 			description,
+			numSections: parseInt(numSections, 10),
 			createdAt: new Date()
 		});
 	},
