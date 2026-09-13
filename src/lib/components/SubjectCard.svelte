@@ -9,12 +9,28 @@
 		$props();
 
 	let deleting = $state(false);
+
+	const href = $derived(resolve(`/subjects/${subjectId}`));
+
+	function visit() {
+		if (!deleting) goto(href);
+	}
+
+	function onCardKeydown(e: KeyboardEvent) {
+		if (e.key === 'Enter' || e.key === ' ') {
+			e.preventDefault();
+			visit();
+		}
+	}
 </script>
 
 <div
-	class="card h-50 w-full min-w-0 rounded-lg bg-base-200 hover:cursor-pointer hover:bg-base-300 transition-all duration-200"
-	onclick={() => goto(resolve(`/subjects/${subjectId}`))}
-	aria-label="visit this subject"
+		class="card h-50 w-full min-w-0 rounded-lg bg-base-200 hover:cursor-pointer hover:bg-base-300 transition-all duration-200"
+		onclick={visit}
+		onkeydown={onCardKeydown}
+		role="link"
+		tabindex="0"
+		aria-label={`Visit subject ${title}`}
 >
 	<div class="card-body">
 		<div class="flex h-full flex-col gap-2">
@@ -28,6 +44,7 @@
 					<button
 						class="rounded-full p-0.5 hover:bg-base-100 active:bg-gray-800"
 						aria-label="Modify Subject"
+						onclick={(e) => e.stopPropagation()}
 					>
 						<EllipsisVertical />
 					</button>
@@ -35,6 +52,7 @@
 					<form
 						method="POST"
 						action="?/deleteSubject"
+						onclick={(e) => e.stopPropagation()}
 						use:enhance={() => {
 							deleting = true;
 							return async ({ update }) => {
