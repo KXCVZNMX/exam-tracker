@@ -2,6 +2,8 @@
 	import { EllipsisVertical, X } from '@lucide/svelte';
 	import { truncateByWidth } from '$lib/util/general';
 	import { enhance } from '$app/forms';
+	import {goto} from "$app/navigation";
+	import {resolve} from "$app/paths";
 
 	let { title, description, subjectId }: { title: string; description: string; subjectId: string } =
 		$props();
@@ -9,7 +11,11 @@
 	let deleting = $state(false);
 </script>
 
-<div class="card h-50 w-full min-w-0 rounded-lg bg-base-200">
+<div
+	class="card h-50 w-full min-w-0 rounded-lg bg-base-200 hover:cursor-pointer hover:bg-base-300 transition-all duration-200"
+	onclick={goto(resolve(`/subjects/${subjectId}`))}
+	aria-label="visit this subject"
+>
 	<div class="card-body">
 		<div class="flex h-full flex-col gap-2">
 			<div class="flex-between flex">
