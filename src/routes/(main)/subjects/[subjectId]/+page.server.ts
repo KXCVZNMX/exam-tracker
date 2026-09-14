@@ -30,7 +30,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	}
 
 	return {
-		subject: subject ? { ...subject, _id: subject._id.toString() } : null,
+		subject: { ...subject, _id: subject._id.toString() },
 
 		subjectExams: subjectExams ? { ...subjectExams, _id: subjectExams._id.toString() } : null
 	};
