@@ -5,12 +5,8 @@
 
 	let {
 		show = $bindable(false),
-		subjectId,
-		userId
 	}: {
 		show?: boolean;
-		subjectId: string;
-		userId: string;
 	} = $props();
 	let submitting = $state(false);
 	let sections = $state(1);
