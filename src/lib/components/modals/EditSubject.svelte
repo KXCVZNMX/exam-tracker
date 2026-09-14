@@ -8,7 +8,13 @@
 		description,
 		numSections,
 		subjectId
-	}: { show?: boolean; title: string; description: string; numSections: number; subjectId: string } = $props();
+	}: {
+		show?: boolean;
+		title: string;
+		description: string;
+		numSections: number;
+		subjectId: string;
+	} = $props();
 	let submitting = $state(false);
 </script>
 
