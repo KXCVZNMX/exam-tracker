@@ -1,6 +1,6 @@
 import { type Actions, error } from '@sveltejs/kit';
 import db from '$lib/server/mongodb';
-import type { SubjectsContent } from '$lib/types/subjects';
+import type { Exam, SubjectsContent } from '$lib/types/subjects';
 import { ObjectId } from 'mongodb';
 
 export const deleteSubject: Actions = {
@@ -19,6 +19,10 @@ export const deleteSubject: Actions = {
 
 		await db.collection<SubjectsContent>('subjects').deleteOne({
 			_id: new ObjectId(subjectId),
+			userId: session.userId
+		});
+		await db.collection<Exam>('exams').deleteMany({
+			subjectId: new ObjectId(subjectId).toString(),
 			userId: session.userId
 		});
 	}
