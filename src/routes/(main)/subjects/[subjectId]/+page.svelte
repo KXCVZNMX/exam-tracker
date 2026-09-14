@@ -8,7 +8,7 @@
     let show = $state(false);
 </script>
 
-<AddExam bind:show={show} />
+<AddExam bind:show={show} sections={data.subject.numSections}/>
 
 <div class="p-5">
     <h1 class="pt-10 text-5xl font-bold">{data.subject.name}</h1>

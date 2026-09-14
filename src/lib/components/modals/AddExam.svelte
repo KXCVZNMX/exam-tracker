@@ -5,11 +5,12 @@
 
 	let {
 		show = $bindable(false),
+		sections,
 	}: {
 		show?: boolean;
+		sections: number;
 	} = $props();
 	let submitting = $state(false);
-	let sections = $state(1);
 	let completed = $state(false);
 	let comment = $state('');
 
@@ -85,19 +86,6 @@
 						bind:checked={completed}
 					/>
 				</label>
-			</fieldset>
-
-			<fieldset class="fieldset w-full sm:w-1/2">
-				<legend class="fieldset-legend">Number of Sections</legend>
-				<input
-					type="number"
-					name="sections"
-					class="input w-full rounded-sm"
-					min="1"
-					max="4"
-					bind:value={sections}
-					required
-				/>
 			</fieldset>
 
 			<!--eslint-disable-next-line @typescript-eslint/no-unused-vars-->
