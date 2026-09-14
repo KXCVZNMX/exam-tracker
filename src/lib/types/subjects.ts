@@ -11,7 +11,7 @@ export interface Exam {
 	subjectId: string;
 	company: string;
 	year: number;
-	completed: boolean;
+	dateCompleted: Date;
 	sections: {
 		sectionNum: number;
 		sectionScore: number;

@@ -15,14 +15,19 @@ export const actions: Actions = {
 		const company = data.get('company')?.toString().trim();
 		const year = Number(data.get('year'));
 		const sectionCount = Number(data.get('sections'));
-		const completed = data.get('completed') === 'on';
+		const dateCompletedValue = data.get('dateCompleted')?.toString().trim();
+		const dateCompleted = dateCompletedValue
+			? new Date(`${dateCompletedValue}T00:00:00.000Z`)
+			: null;
 		const comment = data.get('comment')?.toString() ?? '';
 
 		if (
 			!company ||
 			!Number.isInteger(year) ||
 			!Number.isInteger(sectionCount) ||
-			sectionCount < 1
+			sectionCount < 1 ||
+			!dateCompleted ||
+			Number.isNaN(dateCompleted.getTime())
 		) {
 			throw error(400, 'Invalid exam details');
 		}
@@ -52,7 +57,7 @@ export const actions: Actions = {
 			await db.collection<Exam>('exams').insertOne({
 				company,
 				year,
-				completed,
+				dateCompleted,
 				sections,
 				comments: comment ? [comment] : [],
 				subjectId,
@@ -78,10 +83,13 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			_id: new ObjectId(params.subjectId),
 			userId: session.userId
 		});
-		subjectExams = await db.collection<Exam>('exams').find({
-			subjectId: params.subjectId,
-			userId: session.userId
-		}).toArray();
+		subjectExams = await db
+			.collection<Exam>('exams')
+			.find({
+				subjectId: params.subjectId,
+				userId: session.userId
+			})
+			.toArray();
 	} catch {
 		throw error(400, 'Invalid subject id');
 	}

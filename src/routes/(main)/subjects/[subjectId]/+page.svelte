@@ -1,6 +1,6 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import {Plus, Check, X} from "@lucide/svelte";
+    import {Plus} from "@lucide/svelte";
     import AddExam from "$lib/components/modals/AddExam.svelte";
     import {truncateByWidth} from "$lib/util/general";
 
@@ -48,13 +48,7 @@
                     <tr class="hover:bg-base-200/70 transition-all duration-100">
                         <td>{exam.company}</td>
                         <td>{exam.year}</td>
-                        <td>
-                            {#if exam.completed}
-                                <Check />
-                            {:else}
-                                <X />
-                            {/if}
-                        </td>
+                        <td>{exam.dateCompleted.toLocaleDateString()}</td>
                         {#each exam.sections as section, j (j)}
                             <td>{section.sectionScore}/{section.sectionFullScore}</td>
                         {/each}

@@ -2,17 +2,28 @@
 	import { X } from '@lucide/svelte';
 	import { enhance } from '$app/forms';
 	import { renderMarkdown } from '$lib/util/renderMarkdown';
+	import 'cally';
 
 	let {
 		show = $bindable(false),
-		sections,
+		sections
 	}: {
 		show?: boolean;
 		sections: number;
 	} = $props();
 	let submitting = $state(false);
-	let completed = $state(false);
 	let comment = $state('');
+	let date = $state('');
+	let calendarDate: HTMLElement & { value: string };
+
+	$effect(() => {
+		if (!calendarDate) return;
+		const handleChange = () => {
+			date = calendarDate.value;
+		};
+		calendarDate.addEventListener('change', handleChange);
+		return () => calendarDate.removeEventListener('change', handleChange);
+	});
 
 	let renderedComment = $derived(renderMarkdown(comment));
 </script>
@@ -51,6 +62,8 @@
 				};
 			}}
 		>
+			<input type="hidden" name="sections" value={sections} />
+
 			<fieldset class="fieldset">
 				<legend class="fieldset-legend">Company</legend>
 				<input
@@ -77,15 +90,43 @@
 			</fieldset>
 
 			<fieldset class="fieldset">
-				<legend class="fieldset-legend">Completed</legend>
-				<label class="label cursor-pointer justify-start gap-3">
-					<input
-						type="checkbox"
-						name="completed"
-						class="toggle toggle-primary"
-						bind:checked={completed}
-					/>
-				</label>
+				<legend class="fieldset-legend">Date completed</legend>
+				<input type="hidden" name="dateCompleted" value={date} required />
+				<button
+					type="button"
+					popovertarget="cally-popover1"
+					class="input"
+					id="cally1"
+					style="anchor-name:--cally1"
+				>
+					{date || 'Pick a date'}
+				</button>
+				<div
+					popover
+					id="cally-popover1"
+					class="dropdown rounded-box bg-base-100 shadow-lg"
+					style="position-anchor:--cally1"
+				>
+					<calendar-date bind:this={calendarDate} class="cally" value={date}>
+						<svg
+							aria-label="Previous"
+							{...{ slot: 'previous' }}
+							class="size-4 fill-current"
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							><path d="M15.75 19.5 8.25 12l7.5-7.5"></path>
+						</svg>
+						<svg
+							aria-label="Next"
+							{...{ slot: 'next' }}
+							class="size-4 fill-current"
+							xmlns="http://www.w3.org/2000/svg"
+							viewBox="0 0 24 24"
+							><path d="m8.25 4.5 7.5 7.5-7.5 7.5"></path>
+						</svg>
+						<calendar-month></calendar-month>
+					</calendar-date>
+				</div>
 			</fieldset>
 
 			<!--eslint-disable-next-line @typescript-eslint/no-unused-vars-->
