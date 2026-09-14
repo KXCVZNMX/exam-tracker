@@ -1,14 +1,19 @@
 <script lang="ts">
-	import { EllipsisVertical, X } from '@lucide/svelte';
+	import { EllipsisVertical } from '@lucide/svelte';
 	import { truncateByWidth } from '$lib/util/general';
-	import { enhance } from '$app/forms';
 	import { goto } from '$app/navigation';
 	import { resolve } from '$app/paths';
+	import EditSubject from '$lib/components/modals/EditSubject.svelte';
 
-	let { title, description, subjectId }: { title: string; description: string; subjectId: string } =
-		$props();
+	let {
+		title,
+		description,
+		subjectId,
+		numSections
+	}: { title: string; description: string; subjectId: string; numSections: number } = $props();
 
 	let deleting = $state(false);
+	let showEdit = $state(false);
 
 	const href = $derived(resolve(`/subjects/${subjectId}`));
 
@@ -23,6 +28,8 @@
 		}
 	}
 </script>
+
+<EditSubject bind:show={showEdit} {title} {description} {numSections} {subjectId} />
 
 <div
 	class="card h-50 w-full min-w-0 rounded-lg bg-base-200 transition-all duration-200 hover:cursor-pointer hover:bg-base-300"
@@ -42,36 +49,16 @@
 				<!-- TODO: Button for editing subject info and deleting subject-->
 				<div class="flex flex-row gap-2 text-gray-300">
 					<button
+						type="button"
 						class="rounded-full p-0.5 hover:bg-base-100 active:bg-gray-800"
 						aria-label="Modify Subject"
-						onclick={(e) => e.stopPropagation()}
+						onclick={(e) => {
+							e.stopPropagation();
+							showEdit = true;
+						}}
 					>
 						<EllipsisVertical />
 					</button>
-
-					<form
-						method="POST"
-						action="?/deleteSubject"
-						use:enhance={() => {
-							deleting = true;
-							return async ({ update }) => {
-								deleting = false;
-								await update();
-							};
-						}}
-					>
-						<input type="hidden" name="id" value={subjectId} />
-
-						<!-- TODO: Make this have a warning-->
-						<button
-							class="rounded-full p-0.5 hover:bg-base-100 active:bg-gray-800"
-							aria-label="Delete Subject"
-							type="submit"
-							disabled={deleting}
-						>
-							<X />
-						</button>
-					</form>
 				</div>
 			</div>
 

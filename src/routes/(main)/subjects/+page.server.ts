@@ -3,6 +3,7 @@ import db from '$lib/server/mongodb';
 import type { SubjectsContent } from '$lib/types/subjects';
 import type { PageServerLoad } from '../../../../.svelte-kit/types/src/routes/(main)/subjects/$types';
 import { deleteSubject } from '$lib/server/actions/subjects';
+import { ObjectId } from 'mongodb';
 
 export const actions: Actions = {
 	addSubject: async ({ request, locals }) => {
@@ -27,6 +28,36 @@ export const actions: Actions = {
 			numSections: parseInt(numSections, 10),
 			createdAt: new Date()
 		});
+	},
+	editSubject: async ({ request, locals }) => {
+		const data = await request.formData();
+		const name = data.get('name')?.toString().trim();
+		const description = data.get('description')?.toString().trim() || '';
+		const numSections = data.get('sections')?.toString().trim();
+		const subjectId = data.get('subjectId')?.toString().trim();
+
+		const session = locals.session;
+		if (!session || !locals.user) {
+			throw error(403, 'Forbidden');
+		}
+
+		if (!name || !numSections || !subjectId) {
+			throw error(400, 'Subject name, subject Id and sections are required');
+		}
+
+		await db.collection<SubjectsContent>('subjects').updateOne(
+			{
+				_id: new ObjectId(subjectId),
+				userId: session.userId
+			},
+			{
+				$set: {
+					name,
+					description,
+					numSections: parseInt(numSections, 10)
+				}
+			}
+		);
 	},
 	...deleteSubject
 };

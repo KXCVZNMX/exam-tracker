@@ -31,6 +31,7 @@
 				title={subject.name}
 				description={subject.description || ''}
 				subjectId={subject._id}
+				numSections={subject.numSections}
 			/>
 		{/each}
 	</div>
