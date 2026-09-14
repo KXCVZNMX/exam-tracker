@@ -67,6 +67,27 @@ export const actions: Actions = {
 			if (cause && typeof cause === 'object' && 'status' in cause) throw cause;
 			throw error(400, 'Invalid subject id');
 		}
+	},
+
+	deleteExam: async ({ request, locals }) => {
+		const data = await request.formData();
+		const subjectId = data.get('subjectId')?.toString().trim();
+		const examId = data.get('examId')?.toString().trim();
+
+		const session = locals.session;
+		if (!session || !locals.user) {
+			throw error(403, 'Forbidden');
+		}
+
+		if (!subjectId || !examId) {
+			throw error(400, 'Cannot delete subject without subject/user/exam ID');
+		}
+
+		await db.collection<Exam>('exams').deleteOne({
+			_id: new ObjectId(examId),
+			userId: session.userId,
+			subjectId,
+		});
 	}
 };
 

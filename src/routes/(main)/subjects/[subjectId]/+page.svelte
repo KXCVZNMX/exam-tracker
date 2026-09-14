@@ -1,11 +1,13 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import {Plus} from "@lucide/svelte";
+    import {Plus, X} from "@lucide/svelte";
     import AddExam from "$lib/components/modals/AddExam.svelte";
     import {truncateByWidth} from "$lib/util/general";
+	import { enhance } from '$app/forms';
 
     let { data }: { data: PageData } = $props();
     let show = $state(false);
+    let deleting = $state(false);
 </script>
 
 <AddExam bind:show={show} sections={data.subject.numSections}/>
@@ -39,7 +41,8 @@
                         </th>
                     {/each}
 
-                    <th class="w-[40%]">Comments</th>
+                    <th class="w-[35%]">Comments</th>
+                    <th class="w-[5%]"></th>
                 </tr>
             </thead>
 
@@ -53,6 +56,29 @@
                             <td>{section.sectionScore}/{section.sectionFullScore}</td>
                         {/each}
                         <td>{truncateByWidth(exam.comments[0] ?? '', 48)}</td>
+                        <td>
+                            <form
+                                method="POST"
+                                action="?/deleteExam"
+                                use:enhance={() => {
+                                    deleting = true;
+                                    return async ({ update }) => {
+                                        deleting = false;
+                                        await update();
+                                    };
+                                }}
+                            >
+                                <input type="hidden" name="subjectId" value={data.subject._id} />
+                                <input type="hidden" name="examId" value={exam._id} />
+                                <button
+                                    type="submit"
+                                    aria-label="Delete exam"
+                                    class="hover:bg-base-300 rounded-full transition-all duration-100"
+                                >
+                                    <X size={15} />
+                                </button>
+                            </form>
+                        </td>
                     </tr>
                 {/each}
             </tbody>
