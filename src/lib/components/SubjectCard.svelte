@@ -52,7 +52,6 @@
 					<form
 						method="POST"
 						action="?/deleteSubject"
-						onclick={(e) => e.stopPropagation()}
 						use:enhance={() => {
 							deleting = true;
 							return async ({ update }) => {
