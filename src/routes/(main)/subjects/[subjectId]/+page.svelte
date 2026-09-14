@@ -74,6 +74,7 @@
 									type="submit"
 									aria-label="Delete exam"
 									class="rounded-full transition-all duration-100 hover:bg-base-300"
+									disabled={deleting}
 								>
 									<X size={15} />
 								</button>
