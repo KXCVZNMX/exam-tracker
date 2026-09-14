@@ -11,7 +11,7 @@ export interface Exam {
 	subjectId: string;
 	company: string;
 	year: number;
-	dateCompleted: Date;
+	dateCompleted: Date | null;
 	sections: {
 		sectionNum: number;
 		sectionScore: number;

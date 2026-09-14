@@ -26,8 +26,7 @@ export const actions: Actions = {
 			!Number.isInteger(year) ||
 			!Number.isInteger(sectionCount) ||
 			sectionCount < 1 ||
-			!dateCompleted ||
-			Number.isNaN(dateCompleted.getTime())
+			(dateCompleted !== null && Number.isNaN(dateCompleted.getTime()))
 		) {
 			throw error(400, 'Invalid exam details');
 		}

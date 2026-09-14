@@ -13,13 +13,13 @@
 	} = $props();
 	let submitting = $state(false);
 	let comment = $state('');
-	let date = $state('');
+	let date = $state<string | null>(null);
 	let calendarDate: HTMLElement & { value: string };
 
 	$effect(() => {
 		if (!calendarDate) return;
 		const handleChange = () => {
-			date = calendarDate.value;
+			date = calendarDate.value || null;
 		};
 		calendarDate.addEventListener('change', handleChange);
 		return () => calendarDate.removeEventListener('change', handleChange);
@@ -91,23 +91,35 @@
 
 			<fieldset class="fieldset">
 				<legend class="fieldset-legend">Date completed</legend>
-				<input type="hidden" name="dateCompleted" value={date} required />
-				<button
-					type="button"
-					popovertarget="cally-popover1"
-					class="input"
-					id="cally1"
-					style="anchor-name:--cally1"
-				>
-					{date || 'Pick a date'}
-				</button>
+				<input type="hidden" name="dateCompleted" value={date ?? ''} />
+				<div class="flex flex-col sm:flex-row gap-5">
+					<button
+						type="button"
+						popovertarget="cally-popover1"
+						class="input"
+						id="cally1"
+						style="anchor-name:--cally1"
+					>
+						{date || 'Pick a date'}
+					</button>
+					<button
+						type="button"
+						class="btn btn-md btn-secondary"
+						onclick={() => {
+							date = null;
+							calendarDate.value = '';
+						}}
+					>
+						Clear date
+					</button>
+				</div>
 				<div
 					popover
 					id="cally-popover1"
 					class="dropdown rounded-box bg-base-100 shadow-lg"
 					style="position-anchor:--cally1"
 				>
-					<calendar-date bind:this={calendarDate} class="cally" value={date}>
+					<calendar-date bind:this={calendarDate} class="cally" value={date ?? ''}>
 						<svg
 							aria-label="Previous"
 							{...{ slot: 'previous' }}
