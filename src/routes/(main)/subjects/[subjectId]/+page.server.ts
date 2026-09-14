@@ -86,7 +86,7 @@ export const actions: Actions = {
 		await db.collection<Exam>('exams').deleteOne({
 			_id: new ObjectId(examId),
 			userId: session.userId,
-			subjectId,
+			subjectId
 		});
 	}
 };

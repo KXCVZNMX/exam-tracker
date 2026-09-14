@@ -58,8 +58,7 @@
 					class="textarea w-full rounded-sm"
 					placeholder="Your goals, aims, etc."
 					maxlength="400"
-					rows="3"
-				></textarea>
+					rows="3"></textarea>
 			</fieldset>
 
 			<fieldset class="fieldset w-full sm:w-1/2">
@@ -75,13 +74,7 @@
 			</fieldset>
 
 			<div class="flex justify-end gap-2 pt-2">
-				<button
-						type="button"
-						class="btn btn-ghost"
-						onclick={() => (show = false)}
-				>
-					Cancel
-				</button>
+				<button type="button" class="btn btn-ghost" onclick={() => (show = false)}> Cancel </button>
 
 				<button type="submit" class="btn btn-primary" disabled={submitting}>
 					{submitting ? 'Saving...' : 'Save Subject'}

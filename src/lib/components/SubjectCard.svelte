@@ -2,8 +2,8 @@
 	import { EllipsisVertical, X } from '@lucide/svelte';
 	import { truncateByWidth } from '$lib/util/general';
 	import { enhance } from '$app/forms';
-	import {goto} from "$app/navigation";
-	import {resolve} from "$app/paths";
+	import { goto } from '$app/navigation';
+	import { resolve } from '$app/paths';
 
 	let { title, description, subjectId }: { title: string; description: string; subjectId: string } =
 		$props();
@@ -25,12 +25,12 @@
 </script>
 
 <div
-		class="card h-50 w-full min-w-0 rounded-lg bg-base-200 hover:cursor-pointer hover:bg-base-300 transition-all duration-200"
-		onclick={visit}
-		onkeydown={onCardKeydown}
-		role="link"
-		tabindex="0"
-		aria-label={`Visit subject ${title}`}
+	class="card h-50 w-full min-w-0 rounded-lg bg-base-200 transition-all duration-200 hover:cursor-pointer hover:bg-base-300"
+	onclick={visit}
+	onkeydown={onCardKeydown}
+	role="link"
+	tabindex="0"
+	aria-label={`Visit subject ${title}`}
 >
 	<div class="card-body">
 		<div class="flex h-full flex-col gap-2">
