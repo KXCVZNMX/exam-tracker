@@ -1,11 +1,13 @@
 <script lang="ts">
     import type { PageData } from './$types';
-    import {Plus, Check} from "@lucide/svelte";
+    import {Plus, Check, X} from "@lucide/svelte";
     import AddExam from "$lib/components/modals/AddExam.svelte";
     import {truncateByWidth} from "$lib/util/general";
 
     let { data }: { data: PageData } = $props();
     let show = $state(false);
+
+    console.log(data)
 </script>
 
 <AddExam bind:show={show} subjectId={data.subject._id} userId={data.subject.userId} />
@@ -44,14 +46,23 @@
             </thead>
 
             <tbody>
-                <tr class="hover:bg-base-200/70 transition-all duration-100">
-                    <td>MAV</td>
-                    <td>2025</td>
-                    <td><Check /></td>
-                    <td>38/40</td>
-                    <td>76/80</td>
-                    <td>{truncateByWidth('Nothing Yet', 48)}</td>
-                </tr>
+                {#each data.subjectExams as exam, i (i)}
+                    <tr class="hover:bg-base-200/70 transition-all duration-100">
+                        <td>{exam.company}</td>
+                        <td>{exam.year}</td>
+                        <td>
+                            {#if exam.completed}
+                                <Check />
+                            {:else}
+                                <X />
+                            {/if}
+                        </td>
+                        {#each exam.sections as section, j (j)}
+                            <td>{section.sectionScore}/{section.sectionFullScore}</td>
+                        {/each}
+                        <td>{truncateByWidth(exam.comments[0] ?? '', 48)}</td>
+                    </tr>
+                {/each}
             </tbody>
         </table>
     </div>

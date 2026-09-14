@@ -1,6 +1,6 @@
 import type { PageServerLoad } from './$types';
 import db from '$lib/server/mongodb';
-import type { Exam, SubjectExams, SubjectsContent } from '$lib/types/subjects';
+import type { Exam, SubjectsContent } from '$lib/types/subjects';
 import { type Actions, error } from '@sveltejs/kit';
 import { ObjectId } from 'mongodb';
 
@@ -49,7 +49,7 @@ export const actions: Actions = {
 			});
 			if (!subject) throw error(404, 'Subject not found');
 
-			await db.collection<Exam & { subjectId: string; userId: string }>('exams').insertOne({
+			await db.collection<Exam>('exams').insertOne({
 				company,
 				year,
 				completed,
@@ -78,10 +78,10 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			_id: new ObjectId(params.subjectId),
 			userId: session.userId
 		});
-		subjectExams = await db.collection<SubjectExams>('subject-exams').findOne({
+		subjectExams = await db.collection<Exam>('exams').find({
 			subjectId: params.subjectId,
 			userId: session.userId
-		});
+		}).toArray();
 	} catch {
 		throw error(400, 'Invalid subject id');
 	}
@@ -93,6 +93,9 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	return {
 		subject: { ...subject, _id: subject._id.toString() },
 
-		subjectExams: subjectExams ? { ...subjectExams, _id: subjectExams._id.toString() } : null
+		subjectExams: subjectExams.map((exam) => ({
+			...exam,
+			_id: exam._id.toString()
+		}))
 	};
 };

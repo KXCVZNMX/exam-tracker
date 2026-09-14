@@ -6,14 +6,9 @@ export interface SubjectsContent {
 	createdAt: Date;
 }
 
-export interface SubjectExams {
+export interface Exam {
 	userId: string;
 	subjectId: string;
-	examName: string;
-	exams: Exam[];
-}
-
-export interface Exam {
 	company: string;
 	year: number;
 	completed: boolean;
