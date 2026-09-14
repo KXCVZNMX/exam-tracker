@@ -51,7 +51,7 @@
 					<tr class="transition-all duration-100 hover:bg-base-200/70">
 						<td>{exam.company}</td>
 						<td>{exam.year}</td>
-						<td>{exam.dateCompleted.toLocaleDateString()}</td>
+						<td>{exam.dateCompleted ? exam.dateCompleted.toLocaleDateString() : 'Incomplete'}</td>
 						{#each exam.sections as section, j (j)}
 							<td>{section.sectionScore}/{section.sectionFullScore}</td>
 						{/each}
