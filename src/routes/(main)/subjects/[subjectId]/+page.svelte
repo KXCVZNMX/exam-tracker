@@ -6,8 +6,6 @@
 
     let { data }: { data: PageData } = $props();
     let show = $state(false);
-
-    console.log(data)
 </script>
 
 <AddExam bind:show={show} subjectId={data.subject._id} userId={data.subject.userId} />
