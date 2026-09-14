@@ -1,8 +1,8 @@
 <script lang="ts">
 	import { X } from '@lucide/svelte';
 	import { enhance } from '$app/forms';
+	import { onMount } from 'svelte';
 	import { renderMarkdown } from '$lib/util/renderMarkdown';
-	import 'cally';
 
 	let {
 		show = $bindable(false),
@@ -15,6 +15,10 @@
 	let comment = $state('');
 	let date = $state<string | null>(null);
 	let calendarDate: HTMLElement & { value: string };
+
+	onMount(() => {
+		void import('cally');
+	});
 
 	$effect(() => {
 		if (!calendarDate) return;
@@ -92,7 +96,7 @@
 			<fieldset class="fieldset">
 				<legend class="fieldset-legend">Date completed</legend>
 				<input type="hidden" name="dateCompleted" value={date ?? ''} />
-				<div class="flex flex-col sm:flex-row gap-5">
+				<div class="flex flex-col gap-5 sm:flex-row">
 					<button
 						type="button"
 						popovertarget="cally-popover1"
