@@ -75,26 +75,22 @@
 					rows="3"> {description} </textarea>
 			</fieldset>
 
-			<div class="flex flex-col sm:flex-row items-stretch sm:items-end gap-4">
+			<div class="flex flex-col items-stretch gap-4 sm:flex-row sm:items-end">
 				<fieldset class="fieldset w-full sm:flex-1">
 					<legend class="fieldset-legend">Number of Sections</legend>
 					<input
-							type="number"
-							name="sections"
-							class="input w-full rounded-sm"
-							value={numSections}
-							min="1"
-							max="4"
-							required
+						type="number"
+						name="sections"
+						class="input w-full rounded-sm"
+						value={numSections}
+						min="1"
+						max="4"
+						required
 					/>
 				</fieldset>
 
 				<div class="flex gap-2 pb-0 sm:pb-1">
-					<button
-							type="button"
-							class="btn btn-ghost"
-							onclick={() => (show = false)}
-					>
+					<button type="button" class="btn btn-ghost" onclick={() => (show = false)}>
 						Cancel
 					</button>
 
