@@ -1,5 +1,10 @@
 name: CI
 
+permissions:
+  contents: read
+  security-events: write
+  packages: read
+
 on:
   push:
   pull_request:
@@ -30,3 +35,16 @@ jobs:
       - run: pnpm lint
       - run: pnpm check
       - run: pnpm build
+
+  codeql:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+
+      - uses: github/codeql-action/init@v3
+        with:
+          languages: javascript-typescript
+
+      - uses: github/codeql-action/autobuild@v3
+
+      - uses: github/codeql-action/analyze@v3
