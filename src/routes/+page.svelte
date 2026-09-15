@@ -5,6 +5,12 @@
 	import { resolve } from '$app/paths';
 </script>
 
+<svelte:head>
+	<title>
+	Exam Tracker
+</title>
+</svelte:head>
+
 <div class="relative flex min-h-screen items-center justify-center">
 	<img
 		src={vcaa}

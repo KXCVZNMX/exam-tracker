@@ -10,6 +10,12 @@
 	let deleting = $state(false);
 </script>
 
+<svelte:head>
+	<title>
+		{data.subject.name} Exams
+	</title>
+</svelte:head>
+
 <AddExam bind:show sections={data.subject.numSections} />
 
 <div class="p-5">
