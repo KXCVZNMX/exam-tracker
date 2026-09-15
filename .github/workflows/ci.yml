@@ -7,7 +7,13 @@ on:
 jobs:
   check:
     runs-on: ubuntu-latest
-
+    env:
+      GITHUB_CLIENT_ID: ${{ secrets.GH_CLIENT_ID }}
+      GITHUB_CLIENT_SECRET: ${{ secrets.GH_CLIENT_SECRET }}
+      BETTER_AUTH_SECRET: ${{ secrets.BETTER_AUTH_SECRET }}
+      BETTER_AUTH_URL: ${{ secrets.BETTER_AUTH_URL }}
+      MONGODB_URI: ${{ secrets.MONGODB_URI }}
+      MONGODB_DATABASE: ${{ secrets.MONGODB_DATABASE }}
     steps:
       - uses: actions/checkout@v5
 
