@@ -68,6 +68,66 @@ export const actions: Actions = {
 		}
 	},
 
+	editExam: async ({ request, locals, params }) => {
+		const session = locals.session;
+		if (!session || !locals.user) throw error(403, 'Forbidden');
+
+		const data = await request.formData();
+		const examId = data.get('examId')?.toString().trim();
+		const subjectId = data.get('subjectId')?.toString().trim();
+		const company = data.get('company')?.toString().trim();
+		const year = Number(data.get('year'));
+		const dateCompletedValue = data.get('dateCompleted')?.toString().trim();
+		const dateCompleted = dateCompletedValue
+			? new Date(`${dateCompletedValue}T00:00:00.000Z`)
+			: null;
+
+		if (
+			!examId ||
+			!subjectId ||
+			subjectId !== params.subjectId ||
+			!company ||
+			!Number.isInteger(year) ||
+			(dateCompleted !== null && Number.isNaN(dateCompleted.getTime()))
+		) {
+			throw error(400, 'Invalid exam details');
+		}
+
+		try {
+			const subject = await db.collection<SubjectsContent>('subjects').findOne({
+				_id: new ObjectId(subjectId),
+				userId: session.userId
+			});
+			if (!subject) throw error(404, 'Subject not found');
+
+			const sections: Exam['sections'] = [];
+			for (let i = 0; i < subject.numSections; i += 1) {
+				const sectionScore = Number(data.get(`mark_${i}`));
+				const sectionFullScore = Number(data.get(`totalMark_${i}`));
+				if (
+					!Number.isFinite(sectionScore) ||
+					!Number.isFinite(sectionFullScore) ||
+					sectionScore < 0 ||
+					sectionFullScore < 1
+				) {
+					throw error(400, 'Invalid section marks');
+				}
+				sections.push({ sectionNum: i + 1, sectionScore, sectionFullScore });
+			}
+
+			const result = await db
+				.collection<Exam>('exams')
+				.updateOne(
+					{ _id: new ObjectId(examId), subjectId, userId: session.userId },
+					{ $set: { company, year, dateCompleted, sections } }
+				);
+			if (!result.matchedCount) throw error(404, 'Exam not found');
+		} catch (cause) {
+			if (cause && typeof cause === 'object' && 'status' in cause) throw cause;
+			throw error(400, 'Invalid exam or subject id');
+		}
+	},
+
 	deleteExam: async ({ request, locals }) => {
 		const data = await request.formData();
 		const subjectId = data.get('subjectId')?.toString().trim();

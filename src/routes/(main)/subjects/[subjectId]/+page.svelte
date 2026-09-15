@@ -1,13 +1,14 @@
 <script lang="ts">
 	import type { PageData } from './$types';
-	import { Plus, X } from '@lucide/svelte';
+	import { Plus, EllipsisVertical } from '@lucide/svelte';
 	import AddExam from '$lib/components/modals/AddExam.svelte';
+	import EditExam from '$lib/components/modals/EditExam.svelte';
 	import { truncateByWidth } from '$lib/util/general';
-	import { enhance } from '$app/forms';
 
 	let { data }: { data: PageData } = $props();
 	let show = $state(false);
-	let deleting = $state(false);
+	let showEdit = $state(false);
+	let selectedExam = $state<PageData['subjectExams'][number] | null>(null);
 </script>
 
 <svelte:head>
@@ -17,6 +18,14 @@
 </svelte:head>
 
 <AddExam bind:show sections={data.subject.numSections} />
+{#if selectedExam}
+	<EditExam
+		bind:show={showEdit}
+		exam={selectedExam}
+		sections={data.subject.numSections}
+		subjectId={data.subject._id}
+	/>
+{/if}
 
 <div class="p-5">
 	<h1 class="pt-10 text-5xl font-bold">{data.subject.name}</h1>
@@ -63,28 +72,17 @@
 						{/each}
 						<td>{truncateByWidth(exam.comments[0] ?? '', 48)}</td>
 						<td>
-							<form
-								method="POST"
-								action="?/deleteExam"
-								use:enhance={() => {
-									deleting = true;
-									return async ({ update }) => {
-										deleting = false;
-										await update();
-									};
+							<button
+								type="button"
+								aria-label="Edit Exam (except comments)"
+								class="rounded-full transition-all duration-100 hover:bg-base-300"
+								onclick={() => {
+									selectedExam = exam;
+									showEdit = true;
 								}}
 							>
-								<input type="hidden" name="subjectId" value={data.subject._id} />
-								<input type="hidden" name="examId" value={exam._id} />
-								<button
-									type="submit"
-									aria-label="Delete exam"
-									class="rounded-full transition-all duration-100 hover:bg-base-300"
-									disabled={deleting}
-								>
-									<X size={15} />
-								</button>
-							</form>
+								<EllipsisVertical size={15} />
+							</button>
 						</td>
 					</tr>
 				{/each}
