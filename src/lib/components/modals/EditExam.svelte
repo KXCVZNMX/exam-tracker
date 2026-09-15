@@ -29,6 +29,7 @@
 	} = $props();
 
 	let submitting = $state(false);
+	let deleting = $state(false);
 	let date = $state('');
 
 	$effect(() => {
@@ -131,10 +132,34 @@
 
 			<div class="flex justify-end gap-2 pt-2">
 				<button type="button" class="btn btn-ghost" onclick={() => (show = false)}>Cancel</button>
-				<button type="submit" class="btn btn-primary" disabled={submitting}>
+				<button type="submit" class="btn btn-primary" disabled={submitting || deleting}>
 					{submitting ? 'Saving...' : 'Save Exam'}
 				</button>
 			</div>
+		</form>
+
+		<form
+			method="POST"
+			action="?/deleteExam"
+			class="mt-6"
+			use:enhance={() => {
+				deleting = true;
+				return async ({ result, update }) => {
+					deleting = false;
+					if (result.type === 'success') show = false;
+					await update();
+				};
+			}}
+		>
+			<input type="hidden" name="subjectId" value={subjectId} />
+			<input type="hidden" name="examId" value={exam._id} />
+			<fieldset class="fieldset rounded-box border border-error p-4">
+				<legend class="fieldset-legend text-error">Danger zone</legend>
+				<p class="text-sm">Permanently delete this exam. This cannot be undone.</p>
+				<button type="submit" class="btn mt-2 btn-error" disabled={submitting || deleting}>
+					{deleting ? 'Deleting...' : 'Delete Exam'}
+				</button>
+			</fieldset>
 		</form>
 	</div>
 </dialog>
