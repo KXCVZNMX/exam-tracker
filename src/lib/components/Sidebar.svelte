@@ -2,7 +2,7 @@
 	import VcaaNoText from '$lib/assets/vcaa_no_text.svg';
 	import { House, Library, LogOut } from '@lucide/svelte';
 	import { resolve } from '$app/paths';
-	import { authClient } from '$lib/auth-client.ts';
+	import { authClient } from '$lib/auth-client';
 
 	let { class: className = '' } = $props<{ class?: string }>();
 </script>
