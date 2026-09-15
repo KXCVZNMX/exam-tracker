@@ -10,9 +10,7 @@
 </script>
 
 <svelte:head>
-	<title>
-	Subjects
-</title>
+	<title>Subjects</title>
 </svelte:head>
 
 <AddSubject bind:show={showAddSubjectModal} />
