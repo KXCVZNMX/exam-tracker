@@ -45,18 +45,18 @@
 		<table class="table">
 			<thead>
 				<tr>
-					<th class="w-[15%]">Company</th>
+					<th class="w-[10%]">Company</th>
 					<th class="w-[10%]">Year</th>
-					<th class="w-[5%]">Done</th>
+					<th class="w-[10%]">Date Completed</th>
 
 					<!-- eslint-disable-next-line @typescript-eslint/no-unused-vars -->
 					{#each { length: data.subject.numSections } as _, i (i)}
-						<th style={`width: calc(30% / ${data.subject.numSections})`}>
+						<th style={`width: calc(25% / ${data.subject.numSections})`}>
 							Section {i + 1}
 						</th>
 					{/each}
 
-					<th class="w-[35%]">Comments</th>
+					<th class="w-[45%]">Comments</th>
 					<th class="w-[5%]"></th>
 				</tr>
 			</thead>
