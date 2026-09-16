@@ -1,6 +1,7 @@
 <script lang="ts">
+	import { resolve } from '$app/paths';
 	import type { PageData } from './$types';
-	import { Plus, EllipsisVertical } from '@lucide/svelte';
+	import { Plus, EllipsisVertical, Pen } from '@lucide/svelte';
 	import AddExam from '$lib/components/modals/AddExam.svelte';
 	import EditExam from '$lib/components/modals/EditExam.svelte';
 	import { truncateByWidth } from '$lib/util/general';
@@ -70,18 +71,31 @@
 						{#each exam.sections as section, j (j)}
 							<td>{section.sectionScore}/{section.sectionFullScore}</td>
 						{/each}
-						<td>{truncateByWidth(exam.comments[0] ?? '', 48)}</td>
+						<td>
+							<div class="flex items-center justify-between gap-3">
+								<span>{truncateByWidth(exam.comments[0] ?? '', 48)}</span>
+								<a
+									class="flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-full text-base-content/60 transition-[background-color,color,box-shadow] duration-200 hover:bg-base-300 hover:text-base-content hover:shadow-sm hover:shadow-black/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:shadow-none motion-reduce:transition-none"
+									href={resolve(
+										`/subjects/${data.subject._id}/comments?id=${encodeURIComponent(exam._id)}`
+									)}
+									aria-label={`Edit comments for ${exam.company} ${exam.year}`}
+								>
+									<Pen size={12} />
+								</a>
+							</div>
+						</td>
 						<td>
 							<button
 								type="button"
 								aria-label="Edit Exam (except comments)"
-								class="rounded-full transition-all duration-100 hover:bg-base-300"
+								class="flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-full text-base-content/60 transition-[background-color,color,box-shadow] duration-200 hover:bg-base-300 hover:text-base-content hover:shadow-sm hover:shadow-black/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:shadow-none motion-reduce:transition-none"
 								onclick={() => {
 									selectedExam = exam;
 									showEdit = true;
 								}}
 							>
-								<EllipsisVertical size={15} />
+								<EllipsisVertical size={14} />
 							</button>
 						</td>
 					</tr>
