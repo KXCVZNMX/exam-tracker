@@ -61,7 +61,7 @@
 				>
 					Go login first →˷→
 				</button>
-				<div class="dropdown">
+				<div class="dropdown dropdown-end">
 					<button
 						tabindex="0"
 						type="button"
