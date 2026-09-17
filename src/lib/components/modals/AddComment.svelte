@@ -51,7 +51,7 @@
                 <legend class="fieldset-legend">Exam Paper</legend>
 
                 <select name="examName" class="select w-full rounded-sm" required>
-                    <option value="" disabled selected>Select a subject</option>
+                    <option value="" disabled selected>Select a exam</option>
 
                     {#each subjectComments as subject, i (i)}
                         <option value={subject.examId}>{subject.company} {subject.year}</option>
