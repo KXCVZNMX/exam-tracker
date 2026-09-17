@@ -62,11 +62,6 @@ export const actions: Actions = {
 		if (!commentId) throw error(400, 'Comment id is required');
 		if (!examId) throw error(400, 'Exam ID is required');
 
-		console.log(examId);
-		console.log(subjectId);
-		console.log(session.userId);
-		console.log(commentId);
-
 		try {
 			const result = await db.collection<Exam>('exams').updateOne(
 				{
