@@ -18,6 +18,9 @@
 	let saveStatus = $state<SaveStatus>('idle');
 	let saveError = $state<string | null>(null);
 	let deleting = $state(false);
+	let editorEl = $state<HTMLTextAreaElement>();
+	let previewEl = $state<HTMLDivElement>();
+	let syncingScroll = false;
 
 	let comments = $derived<Comments[]>(data.subjectComments.flatMap((exam) => exam.comments));
 	let selectedComment = $derived(
@@ -129,6 +132,33 @@
 		if (isDirty && !confirm('Discard unsaved changes?')) return;
 		selectedCommentId = id;
 		saveStatus = 'idle';
+	}
+
+	function syncScroll(source: HTMLElement, target: HTMLElement) {
+		if (syncingScroll) return;
+		syncingScroll = true;
+
+		const sourceMax = source.scrollHeight - source.clientHeight;
+		const targetMax = target.scrollHeight - target.clientHeight;
+
+		if (sourceMax > 0 && targetMax > 0) {
+			target.scrollTop = (source.scrollTop / sourceMax) * targetMax;
+		}
+
+		// release on next frame so the target's own scroll event (if any) doesn't re-trigger this
+		requestAnimationFrame(() => {
+			syncingScroll = false;
+		});
+	}
+
+	function handleEditorScroll() {
+		if (!editorEl || !previewEl) return;
+		syncScroll(editorEl, previewEl);
+	}
+
+	function handlePreviewScroll() {
+		if (!editorEl || !previewEl) return;
+		syncScroll(previewEl, editorEl);
 	}
 </script>
 
@@ -277,7 +307,9 @@
 				<span>Use $...$ or $$...$$ for KaTeX math</span>
 			</div>
 			<textarea
-				class="min-h-80 flex-1 resize-none bg-transparent p-4 font-mono text-sm leading-6 outline-none placeholder:text-base-content/35"
+				bind:this={editorEl}
+				onscroll={handleEditorScroll}
+				class="min-h-0 flex-1 resize-none bg-transparent p-4 font-mono text-sm leading-6 outline-none placeholder:text-base-content/35"
 				oninput={updateContent}
 				aria-label="Edit comment in Markdown"
 				placeholder="Write a comment in Markdown...">{editorContent}</textarea
@@ -294,7 +326,11 @@
 					<h2 class="font-semibold">Rendered comment</h2>
 				</div>
 			</div>
-			<div class="comment-preview min-h-80 flex-1 overflow-y-auto p-5 text-sm leading-6">
+			<div
+				bind:this={previewEl}
+				onscroll={handlePreviewScroll}
+				class="comment-preview min-h-0 flex-1 overflow-y-auto p-5 text-sm leading-6"
+			>
 				<!--eslint-disable-next-line svelte/no-at-html-tags-->
 				{@html renderedMarkdown}
 			</div>
