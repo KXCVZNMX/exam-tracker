@@ -5,6 +5,7 @@ import type { Comments, Exam, SubjectsContent } from '$lib/types/subjects';
 import { ObjectId } from 'mongodb';
 
 type CommentsWithName = {
+	examId: string;
 	company: string;
 	year: number;
 	comments: Comments[];
@@ -17,7 +18,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 	}
 
 	let subjectName;
-	let subjectContent: Exam[];
+	let subjectContent;
 	try {
 		subjectName = await db.collection<SubjectsContent>('subjects').findOne(
 			{
@@ -38,6 +39,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			},
 			{
 				projection: {
+					_id: 1,
 					company: 1,
 					year: 1,
 					comments: 1
@@ -50,6 +52,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	const subjectComments: CommentsWithName[] = subjectContent
 		.map((exam) => ({
+			examId: exam._id.toString(),
 			company: exam.company,
 			year: exam.year,
 			comments: exam.comments,
