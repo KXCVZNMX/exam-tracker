@@ -24,7 +24,7 @@ export const actions: Actions = {
 		if (!examName) throw error(400, 'ExamId is required');
 
 		const newComment: Comments = {
-			id: examName,
+			id: (new ObjectId()).toString(),
 			title,
 			updated: new Date(),
 			content: ''
