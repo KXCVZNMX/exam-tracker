@@ -1,2 +1,0 @@
-- Exams with dates
-- Exam comments capable of parsing LaTeX and Markdown (maybe even typst)

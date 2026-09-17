@@ -1,18 +1,16 @@
 <script lang="ts">
 	import { Check, FileText, Plus, Search, Save } from '@lucide/svelte';
 	import { renderMarkdown } from '$lib/util/renderMarkdown';
-	import type {Comments} from "$lib/types/subjects";
+	import type { Comments } from '$lib/types/subjects';
 	import type { PageData } from './$types';
-	import AddComment from "$lib/components/modals/AddComment.svelte";
-	import {deserialize} from "$app/forms";
-	import {onMount} from "svelte";
-	import {beforeNavigate} from "$app/navigation";
+	import AddComment from '$lib/components/modals/AddComment.svelte';
+	import { deserialize } from '$app/forms';
+	import { onMount } from 'svelte';
+	import { beforeNavigate } from '$app/navigation';
 
 	let { data }: { data: PageData } = $props();
 
-	let comments = $derived<Comments[]>(
-		data.subjectComments.flatMap((exam) => exam.comments)
-	);
+	let comments = $derived<Comments[]>(data.subjectComments.flatMap((exam) => exam.comments));
 	let showAddComment = $state(false);
 	let selectedCommentId = $state('');
 	let searchQuery = $state('');
@@ -23,7 +21,7 @@
 
 	let selectedExamId = $derived(
 		data.subjectComments.find((exam) =>
-				exam.comments.some((comment) => comment.id === selectedComment?.id)
+			exam.comments.some((comment) => comment.id === selectedComment?.id)
 		)?.examId
 	);
 
@@ -122,9 +120,7 @@
 		class="grid min-h-0 flex-1 grid-cols-1 overflow-hidden rounded-box border border-base-content/10 bg-base-100 shadow-sm lg:grid-cols-[minmax(14rem,0.85fr)_minmax(20rem,1.35fr)_minmax(20rem,1.5fr)]"
 	>
 		<!-- Comment file explorer -->
-		<aside
-			class="flex min-h-72 min-w-0 flex-col border-base-content/10 bg-base-200/45 lg:border-r"
-		>
+		<aside class="flex min-h-72 min-w-0 flex-col border-base-content/10 bg-base-200/45 lg:border-r">
 			<div class="flex items-center justify-between border-b border-base-content/10 px-4 py-2.75">
 				<div>
 					<p class="text-xs font-semibold tracking-[0.14em] text-base-content/55 uppercase">
@@ -132,7 +128,12 @@
 					</p>
 					<h2 class="mt-0.5 font-semibold">My comments</h2>
 				</div>
-				<button class="btn btn-circle btn-ghost btn-sm" type="button" aria-label="Create a comment" onclick={() => showAddComment = true}>
+				<button
+					class="btn btn-circle btn-ghost btn-sm"
+					type="button"
+					aria-label="Create a comment"
+					onclick={() => (showAddComment = true)}
+				>
 					<Plus size={17} />
 				</button>
 			</div>
@@ -204,11 +205,11 @@
 					<h2 class="truncate font-semibold">{selectedComment?.title ?? 'New comment'}</h2>
 				</div>
 				<button
-						class="btn gap-1.5 btn-ghost btn-sm"
-						type="button"
-						aria-label="Save comment"
-						onclick={saveComment}
-						disabled={saveStatus === 'saving'}
+					class="btn gap-1.5 btn-ghost btn-sm"
+					type="button"
+					aria-label="Save comment"
+					onclick={saveComment}
+					disabled={saveStatus === 'saving'}
 				>
 					<Save size={15} />
 					<span class="hidden sm:inline">
@@ -226,7 +227,8 @@
 				class="min-h-80 flex-1 resize-none bg-transparent p-4 font-mono text-sm leading-6 outline-none placeholder:text-base-content/35"
 				oninput={updateContent}
 				aria-label="Edit comment in Markdown"
-				placeholder="Write a comment in Markdown...">{editorContent}</textarea>
+				placeholder="Write a comment in Markdown...">{editorContent}</textarea
+			>
 		</section>
 
 		<!-- Markdown and KaTeX preview -->

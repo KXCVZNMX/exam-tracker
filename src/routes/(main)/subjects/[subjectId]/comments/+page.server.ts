@@ -9,7 +9,7 @@ type CommentsWithName = {
 	company: string;
 	year: number;
 	comments: Comments[];
-}
+};
 
 export const actions: Actions = {
 	addComment: async ({ request, locals, params }) => {
@@ -24,7 +24,7 @@ export const actions: Actions = {
 		if (!examName) throw error(400, 'ExamId is required');
 
 		const newComment: Comments = {
-			id: (new ObjectId()).toString(),
+			id: new ObjectId().toString(),
 			title,
 			updated: new Date(),
 			content: ''
@@ -35,7 +35,7 @@ export const actions: Actions = {
 				{
 					_id: new ObjectId(examName),
 					userId: session.userId,
-					subjectId: subjectId,
+					subjectId: subjectId
 				},
 				{
 					$push: {
@@ -97,7 +97,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		subjectName = await db.collection<SubjectsContent>('subjects').findOne(
 			{
 				_id: new ObjectId(params.subjectId),
-				userId: session.userId,
+				userId: session.userId
 			},
 			{
 				projection: {
@@ -106,31 +106,33 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 			}
 		);
 
-		subjectContent = await db.collection<Exam>('exams').find(
-			{
-				subjectId: params.subjectId,
-				userId: session.userId,
-			},
-			{
-				projection: {
-					_id: 1,
-					company: 1,
-					year: 1,
-					comments: 1
+		subjectContent = await db
+			.collection<Exam>('exams')
+			.find(
+				{
+					subjectId: params.subjectId,
+					userId: session.userId
+				},
+				{
+					projection: {
+						_id: 1,
+						company: 1,
+						year: 1,
+						comments: 1
+					}
 				}
-			}
-		).toArray();
+			)
+			.toArray();
 	} catch {
 		throw error(400, 'Invalid subject ID');
 	}
 
-	const subjectComments: CommentsWithName[] = subjectContent
-		.map((exam) => ({
-			examId: exam._id.toString(),
-			company: exam.company,
-			year: exam.year,
-			comments: exam.comments,
-		}));
+	const subjectComments: CommentsWithName[] = subjectContent.map((exam) => ({
+		examId: exam._id.toString(),
+		company: exam.company,
+		year: exam.year,
+		comments: exam.comments
+	}));
 
 	if (!subjectName) {
 		throw error(404, 'Subject Not Found');
@@ -142,6 +144,6 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 
 	return {
 		subjectName: subjectName.name,
-		subjectComments,
+		subjectComments
 	};
-}
+};
