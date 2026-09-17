@@ -6,7 +6,7 @@
 	import AddComment from '$lib/components/modals/AddComment.svelte';
 	import { deserialize } from '$app/forms';
 	import { onMount } from 'svelte';
-	import {beforeNavigate, invalidateAll} from '$app/navigation';
+	import { beforeNavigate, invalidateAll } from '$app/navigation';
 
 	type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -244,11 +244,11 @@
 				</div>
 				<div class="flex items-center gap-1.5">
 					<button
-							class="btn btn-ghost btn-sm text-error hover:bg-error/10 hover:text-error"
-							type="button"
-							aria-label="Delete comment"
-							onclick={deleteComment}
-							disabled={deleting}
+						class="btn btn-ghost text-error btn-sm hover:bg-error/10 hover:text-error"
+						type="button"
+						aria-label="Delete comment"
+						onclick={deleteComment}
+						disabled={deleting}
 					>
 						<Trash size={15} />
 						<span class="hidden sm:inline">
@@ -257,11 +257,11 @@
 					</button>
 
 					<button
-							class="btn gap-1.5 btn-ghost btn-sm"
-							type="button"
-							aria-label="Save comment"
-							onclick={saveComment}
-							disabled={saveStatus === 'saving'}
+						class="btn gap-1.5 btn-ghost btn-sm"
+						type="button"
+						aria-label="Save comment"
+						onclick={saveComment}
+						disabled={saveStatus === 'saving'}
 					>
 						<Save size={15} />
 						<span class="hidden sm:inline">
