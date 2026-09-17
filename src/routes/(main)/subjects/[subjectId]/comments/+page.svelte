@@ -168,7 +168,9 @@
 
 <AddComment bind:show={showAddComment} subjectComments={data.subjectComments} />
 
-<div class="flex h-[calc(100vh-5rem)] flex-col gap-4 overflow-hidden p-4 md:p-5">
+<div
+		class="flex min-h-[calc(100vh-5rem)] flex-col gap-4 overflow-visible p-4 md:p-5 lg:h-[calc(100vh-5rem)] lg:overflow-hidden"
+>
 	<div class="flex flex-wrap items-end justify-between gap-3">
 		<h1 class="text-3xl font-bold tracking-tight md:text-4xl">Comment editor</h1>
 		<div class="flex items-center gap-2 text-sm text-base-content/60">
@@ -185,10 +187,12 @@
 	</div>
 
 	<div
-		class="grid min-h-0 flex-1 grid-cols-1 overflow-hidden rounded-box border border-base-content/10 bg-base-100 shadow-sm lg:grid-cols-[minmax(14rem,0.85fr)_minmax(20rem,1.35fr)_minmax(20rem,1.5fr)]"
+			class="grid grid-cols-1 rounded-box border border-base-content/10 bg-base-100 shadow-sm lg:min-h-0 lg:flex-1 lg:overflow-hidden lg:grid-cols-[minmax(14rem,0.85fr)_minmax(20rem,1.35fr)_minmax(20rem,1.5fr)]"
 	>
 		<!-- Comment file explorer -->
-		<aside class="flex min-h-72 min-w-0 flex-col border-base-content/10 bg-base-200/45 lg:border-r">
+		<aside
+				class="flex min-h-72 min-w-0 flex-col border-base-content/10 bg-base-200/45 lg:min-h-0 lg:border-r"
+		>
 			<div class="flex items-center justify-between border-b border-base-content/10 px-4 py-2.75">
 				<div>
 					<p class="text-xs font-semibold tracking-[0.14em] text-base-content/55 uppercase">
@@ -260,7 +264,7 @@
 
 		<!-- Markdown editor -->
 		<section
-			class="flex min-h-96 min-w-0 flex-col border-base-content/10 lg:border-r"
+			class="flex min-h-96 min-w-0 flex-col border-base-content/10 lg:min-h-0 lg:border-r"
 			aria-label="Comment editor"
 		>
 			<div
