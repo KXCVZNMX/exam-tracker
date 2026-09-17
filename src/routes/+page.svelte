@@ -7,15 +7,22 @@
 	import type { PageData } from './$types';
 	import GithubIcon from '../lib/assets/github.svg';
 	import GoogleIcon from '../lib/assets/google.svg';
+	import AddSubject from '$lib/components/modals/AddSubject.svelte';
 
-	async function signIn(provider: 'google' | 'github') { await authClient.signIn.social({ provider, callbackURL: '/subjects' }); }
+	async function signIn(provider: 'google' | 'github') {
+		await authClient.signIn.social({ provider, callbackURL: '/subjects' });
+	}
 
 	let { data }: { data: PageData } = $props();
+
+	let showAddSubject = $state(false);
 </script>
 
 <svelte:head>
 	<title>Exam Tracker</title>
 </svelte:head>
+
+<AddSubject bind:show={showAddSubject} />
 
 <div class="relative flex min-h-screen items-center justify-center">
 	<img
@@ -37,60 +44,46 @@
 			Have fun on your exams
 		</h2>
 
-		<!-- TODO: Make this a dropdown of login options when the user is not logged in-->
 		<div class="flex gap-3">
-			<button
-					class="noto-sans-bold btn grow shadow-neutral-800/50 transition-all duration-300 btn-primary hover:shadow-2xl"
-			>
-				Begin Your Pain
-			</button>
-
 			{#if data.session}
+				<button
+					class="noto-sans-bold btn grow shadow-neutral-800/50 transition-all duration-300 btn-primary hover:shadow-2xl"
+					onclick={() => (showAddSubject = true)}
+				>
+					Begin Your Pain
+				</button>
 				<button class="btn" onclick={() => goto(resolve('/(main)/subjects'))}>
 					<Library /> Subjects
 				</button>
 			{:else}
+				<button
+					class="noto-sans-bold btn grow shadow-neutral-800/50 transition-all duration-300 btn-primary hover:shadow-2xl"
+				>
+					Go login first →˷→
+				</button>
 				<div class="dropdown">
 					<button
-							tabindex="0"
-							type="button"
-							class="noto-sans-bold btn shadow-neutral-800/50 transition-all duration-300 hover:shadow-2xl"
+						tabindex="0"
+						type="button"
+						class="noto-sans-bold btn shadow-neutral-800/50 transition-all duration-300 hover:shadow-2xl"
 					>
 						Login
 					</button>
 
 					<ul
-							tabindex="-1"
-							class="menu dropdown-content z-10 mt-2 w-48 rounded-box bg-base-200 p-2 shadow-lg"
+						tabindex="-1"
+						class="menu dropdown-content z-10 mt-2 w-48 rounded-box bg-base-200 p-2 shadow-lg"
 					>
 						<li>
-							<button
-									type="button"
-									onclick={() => signIn('google')}
-									aria-label="Login with Google"
-							>
-								<img
-										src={GoogleIcon}
-										alt="Google Logo"
-										height="20"
-										width="20"
-								/>
+							<button type="button" onclick={() => signIn('google')} aria-label="Login with Google">
+								<img src={GoogleIcon} alt="Google Logo" height="20" width="20" />
 								<span>Google</span>
 							</button>
 						</li>
 
 						<li>
-							<button
-									type="button"
-									onclick={() => signIn('github')}
-									aria-label="Login with GitHub"
-							>
-								<img
-										src={GithubIcon}
-										alt="GitHub Logo"
-										height="20"
-										width="20"
-								/>
+							<button type="button" onclick={() => signIn('github')} aria-label="Login with GitHub">
+								<img src={GithubIcon} alt="GitHub Logo" height="20" width="20" />
 								<span>GitHub</span>
 							</button>
 						</li>
