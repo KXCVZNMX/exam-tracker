@@ -21,11 +21,17 @@
 		<p class="mb-6 text-base-content/60">Sign in with your GitHub account to continue.</p>
 		{#if error}<p class="mb-3 text-sm text-error">{error}</p>{/if}
 		<div class="flex flex-col gap-3">
-			<button class="btn w-full btn-primary" disabled={pending} onclick={() => signInWithProvider('github')}
-			>{pending ? 'Redirecting...' : 'Continue with GitHub'}</button
+			<button
+				class="btn w-full btn-primary"
+				disabled={pending}
+				onclick={() => signInWithProvider('github')}
+				>{pending ? 'Redirecting...' : 'Continue with GitHub'}</button
 			>
-			<button class="btn w-full btn-primary" disabled={pending} onclick={() => signInWithProvider('google')}
-			>{pending ? 'Redirecting...' : 'Continue with Google'}</button
+			<button
+				class="btn w-full btn-primary"
+				disabled={pending}
+				onclick={() => signInWithProvider('google')}
+				>{pending ? 'Redirecting...' : 'Continue with Google'}</button
 			>
 		</div>
 	</div>
