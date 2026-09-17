@@ -2,7 +2,6 @@
 	import { X } from '@lucide/svelte';
 	import { enhance } from '$app/forms';
 	import { onMount } from 'svelte';
-	import { renderMarkdown } from '$lib/util/renderMarkdown';
 
 	let {
 		show = $bindable(false),
@@ -12,7 +11,6 @@
 		sections: number;
 	} = $props();
 	let submitting = $state(false);
-	let comment = $state('');
 	let date = $state<string | null>(null);
 	let calendarDate: HTMLElement & { value: string };
 
@@ -28,8 +26,6 @@
 		calendarDate.addEventListener('change', handleChange);
 		return () => calendarDate.removeEventListener('change', handleChange);
 	});
-
-	let renderedComment = $derived(renderMarkdown(comment));
 </script>
 
 <dialog class="modal p-4" class:modal-open={show}>
@@ -174,38 +170,6 @@
 					</div>
 				</fieldset>
 			{/each}
-
-			<fieldset class="fieldset">
-				<legend class="fieldset-legend">Comment</legend>
-
-				<div class="grid overflow-hidden rounded-lg border border-base-300 md:grid-cols-2">
-					<!-- Markdown source -->
-					<div class="border-b border-base-300 md:border-r md:border-b-0">
-						<div class="border-b border-base-300 bg-base-200 px-3 py-2">
-							<span class="text-sm font-medium">Markdown</span>
-						</div>
-
-						<textarea
-							name="comment"
-							bind:value={comment}
-							class="textarea h-64 w-full resize-none rounded-none border-0 focus:outline-none"
-							placeholder={'# Comment\n\nWrite **Markdown** here.\n\nUse $x^2$ for inline math.\n\nUse $$\\frac{a}{b}$$ for display math.'}
-							maxlength="4000"></textarea>
-					</div>
-
-					<!-- Preview -->
-					<div>
-						<div class="border-b border-base-300 bg-base-200 px-3 py-2">
-							<span class="text-sm font-medium">Preview</span>
-						</div>
-
-						<div class="comment-preview h-64 max-w-none overflow-y-auto p-4">
-							<!--eslint-disable-next-line svelte/no-at-html-tags-->
-							{@html renderedComment}
-						</div>
-					</div>
-				</div>
-			</fieldset>
 
 			<div class="flex justify-end gap-2 pt-2">
 				<button type="button" class="btn btn-ghost" onclick={() => (show = false)}> Cancel </button>
