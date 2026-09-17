@@ -19,7 +19,6 @@ export const actions: Actions = {
 		const dateCompleted = dateCompletedValue
 			? new Date(`${dateCompletedValue}T00:00:00.000Z`)
 			: null;
-		const comment = data.get('comment')?.toString() ?? '';
 
 		if (
 			!company ||
@@ -58,7 +57,7 @@ export const actions: Actions = {
 				year,
 				dateCompleted,
 				sections,
-				comments: comment ? [comment] : [],
+				comments: [],
 				subjectId,
 				userId: session.userId
 			});
