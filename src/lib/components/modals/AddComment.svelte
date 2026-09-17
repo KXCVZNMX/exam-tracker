@@ -67,7 +67,6 @@
                         class="input w-full rounded-sm"
                         placeholder="Wrong questions, Areas to improve..."
                         maxlength="50"
-                        required
                 />
             </fieldset>
 
