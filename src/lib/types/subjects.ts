@@ -17,5 +17,10 @@ export interface Exam {
 		sectionScore: number;
 		sectionFullScore: number;
 	}[];
-	comments: string[];
+	comments: {
+		id: string;
+		title: string;
+		updated: string;
+		content: string;
+	}[];
 }
