@@ -47,6 +47,46 @@ export const actions: Actions = {
 			if (cause && typeof cause === 'object' && 'status' in cause) throw cause;
 			throw error(400, 'Invalid subject id');
 		}
+	},
+	saveComment: async ({ request, locals, params }) => {
+		const session = locals.session;
+		if (!session || !locals.user) throw error(403, 'Forbidden');
+		const subjectId = params.subjectId;
+		if (!subjectId) throw error(400, 'Subject id is required');
+
+		const data = await request.formData();
+		const commentId = data.get('commentId')?.toString().trim();
+		const content = data.get('content')?.toString().trim() ?? '';
+		const examId = data.get('examId')?.toString().trim();
+
+		if (!commentId) throw error(400, 'Comment id is required');
+		if (!examId) throw error(400, 'Exam ID is required');
+
+		console.log(examId);
+		console.log(subjectId);
+		console.log(session.userId);
+		console.log(commentId);
+
+		try {
+			const result = await db.collection<Exam>('exams').updateOne(
+				{
+					_id: new ObjectId(examId),
+					subjectId,
+					userId: session.userId,
+					'comments.id': commentId
+				},
+				{
+					$set: {
+						'comments.$.content': content,
+						'comments.$.updated': new Date()
+					}
+				}
+			);
+			if (result.matchedCount === 0) throw error(404, 'Comment not found');
+		} catch (cause) {
+			if (cause && typeof cause === 'object' && 'status' in cause) throw cause;
+			throw error(400, 'Invalid subject id');
+		}
 	}
 };
 

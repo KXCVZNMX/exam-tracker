@@ -4,11 +4,12 @@
 	import type {Comments} from "$lib/types/subjects";
 	import type { PageData } from './$types';
 	import AddComment from "$lib/components/modals/AddComment.svelte";
+	import {deserialize} from "$app/forms";
 
 	let { data }: { data: PageData } = $props();
 
 	let comments = $derived<Comments[]>(
-			data.subjectComments.flatMap((exam) => exam.comments)
+		data.subjectComments.flatMap((exam) => exam.comments)
 	);
 	let showAddComment = $state(false);
 	let selectedCommentId = $state('');
@@ -18,14 +19,58 @@
 	);
 	let editorContent = $derived(selectedComment?.content ?? '');
 
+	let selectedExamId = $derived(
+		data.subjectComments.find((exam) =>
+				exam.comments.some((comment) => comment.id === selectedComment?.id)
+		)?.examId
+	);
+
 	let renderedMarkdown = $derived(renderMarkdown(editorContent));
+
+	type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+	let saveStatus = $state<SaveStatus>('idle');
+	let saveError = $state<string | null>(null);
+
+	async function saveComment() {
+		if (!selectedComment || !selectedExamId) return;
+
+		saveStatus = 'saving';
+		saveError = null;
+
+		const formData = new FormData();
+		formData.set('commentId', selectedComment.id);
+		formData.set('content', editorContent);
+		// It is guaranteed (hopefully) that subjectComments.length > 0
+		formData.set('examId', selectedExamId);
+
+		try {
+			const res = await fetch(`?/saveComment`, {
+				method: 'POST',
+				body: formData
+			});
+
+			const result = deserialize(await res.text());
+			if (result.type !== 'success') throw new Error(`Save failed (${res.status})`);
+
+			// commit the buffer into the underlying object only after success
+			selectedComment.content = editorContent;
+			saveStatus = 'saved';
+		} catch (err) {
+			saveStatus = 'error';
+			saveError = err instanceof Error ? err.message : 'Unknown error';
+		}
+	}
 
 	function updateContent(event: Event) {
 		editorContent = (event.currentTarget as HTMLTextAreaElement).value;
 	}
 
+	let isDirty = $derived(editorContent !== (selectedComment?.content ?? ''));
+
 	function selectComment(id: string) {
+		if (isDirty && !confirm('Discard unsaved changes?')) return;
 		selectedCommentId = id;
+		saveStatus = 'idle';
 	}
 </script>
 
@@ -39,10 +84,15 @@
 	<div class="flex flex-wrap items-end justify-between gap-3">
 		<h1 class="text-3xl font-bold tracking-tight md:text-4xl">Comment editor</h1>
 		<div class="flex items-center gap-2 text-sm text-base-content/60">
-			<span class="flex items-center gap-1.5 rounded-full bg-base-200 px-3 py-1.5">
-				<Check size={14} class="text-success" />
-				Saved locally
-			</span>
+			{#if saveStatus === 'saved'}
+				<span class="flex items-center gap-1.5 rounded-full bg-base-200 px-3 py-1.5">
+					<Check size={14} class="text-success" /> Saved
+				</span>
+			{:else if saveStatus === 'saving'}
+				<span class="rounded-full bg-base-200 px-3 py-1.5">Saving…</span>
+			{:else if saveStatus === 'error'}
+				<span class="rounded-full bg-error/20 px-3 py-1.5 text-error">{saveError}</span>
+			{/if}
 		</div>
 	</div>
 
@@ -131,9 +181,17 @@
 					</p>
 					<h2 class="truncate font-semibold">{selectedComment?.title ?? 'New comment'}</h2>
 				</div>
-				<button class="btn gap-1.5 btn-ghost btn-sm" type="button" aria-label="Save comment">
+				<button
+						class="btn gap-1.5 btn-ghost btn-sm"
+						type="button"
+						aria-label="Save comment"
+						onclick={saveComment}
+						disabled={saveStatus === 'saving'}
+				>
 					<Save size={15} />
-					<span class="hidden sm:inline">Save</span>
+					<span class="hidden sm:inline">
+						{saveStatus === 'saving' ? 'Saving…' : 'Save'}
+					</span>
 				</button>
 			</div>
 			<div
