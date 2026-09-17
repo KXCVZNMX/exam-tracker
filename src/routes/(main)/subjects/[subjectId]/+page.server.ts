@@ -175,6 +175,7 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 				subjectId: params.subjectId,
 				userId: session.userId
 			})
+			.sort({ year: -1, company: 1 })
 			.toArray();
 	} catch {
 		throw error(400, 'Invalid subject id');
