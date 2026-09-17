@@ -138,7 +138,7 @@
 
 <AddComment bind:show={showAddComment} subjectComments={data.subjectComments} />
 
-<div class="flex min-h-[calc(100vh-5rem)] flex-col gap-4 p-4 md:p-5">
+<div class="flex h-[calc(100vh-5rem)] flex-col gap-4 p-4 md:p-5 overflow-hidden">
 	<div class="flex flex-wrap items-end justify-between gap-3">
 		<h1 class="text-3xl font-bold tracking-tight md:text-4xl">Comment editor</h1>
 		<div class="flex items-center gap-2 text-sm text-base-content/60">
