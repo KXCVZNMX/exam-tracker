@@ -1,5 +1,5 @@
 <script lang="ts">
-	import { BookOpen, Check, Clock3, Eye, FileText, Plus, Search, Save } from '@lucide/svelte';
+	import { Check, FileText, Plus, Search, Save } from '@lucide/svelte';
 	import { renderMarkdown } from '$lib/util/renderMarkdown';
 
 	type CommentDraft = {
@@ -85,10 +85,10 @@
 		<aside
 			class="flex min-h-72 min-w-0 flex-col border-base-content/10 bg-base-200/45 lg:border-r"
 		>
-			<div class="flex items-center justify-between border-b border-base-content/10 px-4 py-[11px]">
+			<div class="flex items-center justify-between border-b border-base-content/10 px-4 py-2.75">
 				<div>
 					<p class="text-xs font-semibold tracking-[0.14em] text-base-content/55 uppercase">
-						Files
+						Comments
 					</p>
 					<h2 class="mt-0.5 font-semibold">My comments</h2>
 				</div>
@@ -160,12 +160,6 @@
 				oninput={updateContent}
 				aria-label="Edit comment in Markdown"
 				placeholder="Write a comment in Markdown...">{selectedComment?.content ?? ''}</textarea>
-			<div
-				class="flex items-center justify-between border-t border-base-content/10 px-4 py-2 text-xs text-base-content/50"
-			>
-				<span class="flex items-center gap-1.5"><Clock3 size={13} /> Draft template</span>
-				<span>{(selectedComment?.content ?? '').length} characters</span>
-			</div>
 		</section>
 
 		<!-- Markdown and KaTeX preview -->
