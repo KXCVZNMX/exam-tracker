@@ -1,55 +1,21 @@
 <script lang="ts">
 	import { Check, FileText, Plus, Search, Save } from '@lucide/svelte';
 	import { renderMarkdown } from '$lib/util/renderMarkdown';
+	import type {Comments} from "$lib/types/subjects";
+	import type { PageData } from './$types';
+	import AddComment from "$lib/components/modals/AddComment.svelte";
 
-	type CommentDraft = {
-		id: string;
-		title: string;
-		updated: string;
-		content: string;
-	};
+	let { data }: { data: PageData } = $props();
 
 	// Placeholder data for the editor until comments are connected to the API.
-	let comments = $state<CommentDraft[]>([
-		{
-			id: 'quadratic-functions',
-			title: 'Quadratic functions',
-			updated: 'Just now',
-			content:
-				'# Quadratic functions\n\nRemember to check the turning point before sketching the graph. For a quadratic in vertex form, the axis of symmetry is $x=h$.\n\n- Find the intercepts\n- Label the vertex\n- Check the domain and range\n\n$$f(x) = a(x-h)^2 + k$$'
-		},
-		{
-			id: 'exam-timing',
-			title: 'Exam timing plan',
-			updated: 'Yesterday',
-			content:
-				'## Exam timing plan\n\nAllow **10 minutes** at the end to review working and units. Start with the questions that you can answer confidently, then return to the longer problems.'
-		},
-		{
-			id: 'proof-reminders',
-			title: 'Proof reminders',
-			updated: '2 days ago',
-			content:
-				'## Proof reminders\n\nState the theorem you are using, then explain each implication. A clear chain of reasoning earns more marks than a page of unexplained algebra.'
-		},
-		{
-			id: 'formula-sheet',
-			title: 'Formula sheet ideas',
-			updated: 'Last week',
-			content:
-				'# Formula sheet ideas\n\nGroup formulas by topic and include one small example beside each formula. Leave space for common mistakes discovered during practice.'
-		}
-	]);
-
-	let selectedCommentId = $state('quadratic-functions');
+	let comments = $state<Comments[]>([]);
+	let showAddComment = $state(false);
+	let selectedCommentId = $state('');
 	let searchQuery = $state('');
 	let selectedComment = $derived(
 		comments.find((comment) => comment.id === selectedCommentId) ?? comments[0]
 	);
 	let renderedMarkdown = $derived(renderMarkdown(selectedComment?.content ?? ''));
-	let filteredComments = $derived(
-		comments.filter((comment) => comment.title.toLowerCase().includes(searchQuery.toLowerCase()))
-	);
 
 	function selectComment(id: string) {
 		selectedCommentId = id;
@@ -66,6 +32,8 @@
 <svelte:head>
 	<title>Comments</title>
 </svelte:head>
+
+<AddComment bind:show={showAddComment} subjectComments={data.subjectComments} />
 
 <div class="flex min-h-[calc(100vh-5rem)] flex-col gap-4 p-4 md:p-5">
 	<div class="flex flex-wrap items-end justify-between gap-3">
@@ -92,7 +60,7 @@
 					</p>
 					<h2 class="mt-0.5 font-semibold">My comments</h2>
 				</div>
-				<button class="btn btn-circle btn-ghost btn-sm" type="button" aria-label="Create a comment">
+				<button class="btn btn-circle btn-ghost btn-sm" type="button" aria-label="Create a comment" onclick={() => showAddComment = true}>
 					<Plus size={17} />
 				</button>
 			</div>
@@ -110,20 +78,39 @@
 			</label>
 
 			<nav class="min-h-0 flex-1 overflow-y-auto px-2 pb-3" aria-label="Comments">
-				<p class="px-2 pb-2 text-xs font-medium text-base-content/45">NOTES</p>
-				{#each filteredComments as comment (comment.id)}
-					<button
-						type="button"
-						class:menu-active={selectedCommentId === comment.id}
-						class="group mb-1 flex w-full items-start gap-3 rounded-box px-3 py-2.5 text-left transition-colors hover:bg-base-300/70"
-						onclick={() => selectComment(comment.id)}
-					>
-						<FileText size={16} class="mt-0.5 shrink-0 text-primary/75" />
-						<span class="min-w-0 flex-1">
-							<span class="block truncate text-sm font-medium">{comment.title}</span>
-							<span class="mt-0.5 block text-xs text-base-content/50">{comment.updated}</span>
-						</span>
-					</button>
+				<p class="px-2 pb-2 text-xs font-medium text-base-content/45">EXAMS</p>
+				{#each data.subjectComments as examComments, examIndex (examIndex)}
+					{@const matchingComments = examComments.comments.filter((comment) =>
+						comment.title.toLowerCase().includes(searchQuery.toLowerCase())
+					)}
+					{#if matchingComments.length > 0}
+						<details class="mb-2 rounded-box bg-base-100/60" open>
+							<summary class="cursor-pointer px-3 py-2 text-sm font-semibold hover:bg-base-300/60">
+								<div class="flex items-center justify-between gap-2">
+									<span>{examComments.year} {examComments.company}</span>
+									<span class="badge badge-ghost badge-sm">{matchingComments.length}</span>
+								</div>
+							</summary>
+							<div class="px-1 pb-1">
+								{#each matchingComments as comment (comment.id)}
+									<button
+										type="button"
+										class:menu-active={selectedCommentId === comment.id}
+										class="group mb-1 flex w-full items-start gap-3 rounded-box px-3 py-2.5 text-left transition-colors hover:bg-base-300/70"
+										onclick={() => selectComment(comment.id)}
+									>
+										<FileText size={16} class="mt-0.5 shrink-0 text-primary/75" />
+										<span class="min-w-0 flex-1">
+											<span class="block truncate text-sm font-medium">{comment.title}</span>
+											<span class="mt-0.5 block text-xs text-base-content/50"
+												>{comment.updated.toLocaleDateString()}</span
+											>
+										</span>
+									</button>
+								{/each}
+							</div>
+						</details>
+					{/if}
 				{:else}
 					<p class="px-3 py-4 text-sm text-base-content/55">No comments found.</p>
 				{/each}

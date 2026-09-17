@@ -1,5 +1,5 @@
 import type { PageServerLoad } from './$types';
-import { error } from '@sveltejs/kit';
+import { type Actions, error } from '@sveltejs/kit';
 import db from '$lib/server/mongodb';
 import type { Comments, Exam, SubjectsContent } from '$lib/types/subjects';
 import { ObjectId } from 'mongodb';
@@ -10,6 +10,45 @@ type CommentsWithName = {
 	year: number;
 	comments: Comments[];
 }
+
+export const actions: Actions = {
+	addComment: async ({ request, locals, params }) => {
+		const session = locals.session;
+		if (!session || !locals.user) throw error(403, 'Forbidden');
+		const subjectId = params.subjectId;
+		if (!subjectId) throw error(400, 'Subject id is required');
+
+		const data = await request.formData();
+		const examName = data.get('examName')?.toString().trim();
+		const title = (data.get('title') ?? 'Untitled Comment').toString().trim();
+		if (!examName) throw error(400, 'ExamId is required');
+
+		const newComment: Comments = {
+			id: examName,
+			title,
+			updated: new Date(),
+			content: ''
+		};
+
+		try {
+			await db.collection<Exam>('exams').updateOne(
+				{
+					_id: new ObjectId(examName),
+					userId: session.userId,
+					subjectId: subjectId,
+				},
+				{
+					$push: {
+						comments: newComment
+					}
+				}
+			);
+		} catch (cause) {
+			if (cause && typeof cause === 'object' && 'status' in cause) throw cause;
+			throw error(400, 'Invalid subject id');
+		}
+	}
+};
 
 export const load: PageServerLoad = async ({ params, locals }) => {
 	const session = locals.session;
