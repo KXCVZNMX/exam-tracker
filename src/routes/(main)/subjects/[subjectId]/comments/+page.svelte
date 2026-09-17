@@ -5,6 +5,8 @@
 	import type { PageData } from './$types';
 	import AddComment from "$lib/components/modals/AddComment.svelte";
 	import {deserialize} from "$app/forms";
+	import {onMount} from "svelte";
+	import {beforeNavigate} from "$app/navigation";
 
 	let { data }: { data: PageData } = $props();
 
@@ -66,6 +68,26 @@
 	}
 
 	let isDirty = $derived(editorContent !== (selectedComment?.content ?? ''));
+
+	onMount(() => {
+		function handleBeforeUnload(event: BeforeUnloadEvent) {
+			if (!isDirty) return;
+			event.preventDefault();
+			// Chrome requires returnValue to be set
+			event.returnValue = '';
+		}
+
+		window.addEventListener('beforeunload', handleBeforeUnload);
+		return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+	});
+
+	// Warn on in-app (client-side) navigation
+	beforeNavigate((navigation) => {
+		if (!isDirty) return;
+		if (!confirm('You have unsaved changes. Leave without saving?')) {
+			navigation.cancel();
+		}
+	});
 
 	function selectComment(id: string) {
 		if (isDirty && !confirm('Discard unsaved changes?')) return;
