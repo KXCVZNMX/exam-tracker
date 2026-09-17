@@ -23,6 +23,6 @@ export interface Exam {
 export interface Comments {
 	id: string;
 	title: string;
-	updated: string;
+	updated: Date;
 	content: string;
 }
