@@ -5,7 +5,7 @@
 	let { children } = $props(); // Svelte 5 runes mode
 </script>
 
-<div class="flex flex-row">
+<div class="flex min-h-screen w-full flex-row">
 	<Sidebar class="hidden md:flex" />
 	{#if drawerOpen}
 		<button
