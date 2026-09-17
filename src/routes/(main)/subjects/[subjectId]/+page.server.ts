@@ -46,10 +46,17 @@ export const actions: Actions = {
 		}
 
 		try {
-			const subject = await db.collection<SubjectsContent>('subjects').findOne({
-				_id: new ObjectId(subjectId),
-				userId: session.userId
-			});
+			const subject = await db.collection<SubjectsContent>('subjects').findOne(
+				{
+					_id: new ObjectId(subjectId),
+					userId: session.userId
+				},
+				{
+					projection: {
+						_id: 1
+					}
+				}
+			);
 			if (!subject) throw error(404, 'Subject not found');
 
 			await db.collection<Exam>('exams').insertOne({
