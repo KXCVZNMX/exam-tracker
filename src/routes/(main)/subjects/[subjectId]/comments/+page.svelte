@@ -7,25 +7,25 @@
 
 	let { data }: { data: PageData } = $props();
 
-	// Placeholder data for the editor until comments are connected to the API.
-	let comments = $state<Comments[]>([]);
+	let comments = $derived<Comments[]>(
+			data.subjectComments.flatMap((exam) => exam.comments)
+	);
 	let showAddComment = $state(false);
 	let selectedCommentId = $state('');
 	let searchQuery = $state('');
 	let selectedComment = $derived(
 		comments.find((comment) => comment.id === selectedCommentId) ?? comments[0]
 	);
-	let renderedMarkdown = $derived(renderMarkdown(selectedComment?.content ?? ''));
+	let editorContent = $derived(selectedComment?.content ?? '');
+
+	let renderedMarkdown = $derived(renderMarkdown(editorContent));
+
+	function updateContent(event: Event) {
+		editorContent = (event.currentTarget as HTMLTextAreaElement).value;
+	}
 
 	function selectComment(id: string) {
 		selectedCommentId = id;
-	}
-
-	function updateContent(event: Event) {
-		const value = (event.currentTarget as HTMLTextAreaElement).value;
-		const comment = comments.find((item) => item.id === selectedCommentId);
-
-		if (comment) comment.content = value;
 	}
 </script>
 
@@ -146,7 +146,7 @@
 				class="min-h-80 flex-1 resize-none bg-transparent p-4 font-mono text-sm leading-6 outline-none placeholder:text-base-content/35"
 				oninput={updateContent}
 				aria-label="Edit comment in Markdown"
-				placeholder="Write a comment in Markdown...">{selectedComment?.content ?? ''}</textarea>
+				placeholder="Write a comment in Markdown...">{editorContent}</textarea>
 		</section>
 
 		<!-- Markdown and KaTeX preview -->
