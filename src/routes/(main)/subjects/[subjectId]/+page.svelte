@@ -73,7 +73,7 @@
 						{/each}
 						<td>
 							<div class="flex items-center justify-between gap-3">
-								<span>{truncateByWidth(exam.comments[0] ?? '', 48)}</span>
+								<span>{truncateByWidth(exam.comments[0].title ?? '', 48)}</span>
 								<a
 									class="flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-full text-base-content/60 transition-[background-color,color,box-shadow] duration-200 hover:bg-base-300 hover:text-base-content hover:shadow-sm hover:shadow-black/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:shadow-none motion-reduce:transition-none"
 									href={resolve(
