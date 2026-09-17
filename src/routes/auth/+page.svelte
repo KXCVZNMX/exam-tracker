@@ -4,10 +4,10 @@
 	let error = $state('');
 	let pending = $state(false);
 
-	async function signInWithGitHub() {
+	async function signInWithProvider(provider: string) {
 		pending = true;
 		error = '';
-		const result = await authClient.signIn.social({ provider: 'github', callbackURL: '/subjects' });
+		const result = await authClient.signIn.social({ provider: provider, callbackURL: '/subjects' });
 		if (result.error) error = result.error.message ?? 'Unable to authenticate';
 		if (result.error) pending = false;
 	}
@@ -20,8 +20,13 @@
 		<h1 class="mb-2 text-3xl font-bold">Welcome to Exam Tracker</h1>
 		<p class="mb-6 text-base-content/60">Sign in with your GitHub account to continue.</p>
 		{#if error}<p class="mb-3 text-sm text-error">{error}</p>{/if}
-		<button class="btn w-full btn-primary" disabled={pending} onclick={signInWithGitHub}
+		<div class="flex flex-col gap-3">
+			<button class="btn w-full btn-primary" disabled={pending} onclick={() => signInWithProvider('github')}
 			>{pending ? 'Redirecting...' : 'Continue with GitHub'}</button
-		>
+			>
+			<button class="btn w-full btn-primary" disabled={pending} onclick={() => signInWithProvider('google')}
+			>{pending ? 'Redirecting...' : 'Continue with Google'}</button
+			>
+		</div>
 	</div>
 </main>
