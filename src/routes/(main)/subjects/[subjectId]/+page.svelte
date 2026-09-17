@@ -31,13 +31,21 @@
 <div class="p-5">
 	<h1 class="pt-10 text-5xl font-bold">{data.subject.name}</h1>
 
-	<div class="mb-4 flex justify-end">
+	<div class="mb-4 flex justify-end gap-2">
+		<a
+			class="btn aspect-square rounded-full btn-ghost px-0 text-base-content/70 transition-[background-color,color,box-shadow] duration-200 btn-md hover:bg-base-300 hover:text-base-content hover:shadow-sm hover:shadow-black/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:shadow-none motion-reduce:transition-none"
+			href={resolve(`/subjects/${data.subject._id}/comments`)}
+			aria-label="Edit comments"
+		>
+			<Pen size={18} />
+		</a>
+
 		<button
 			class="md:rounded-btn btn aspect-square rounded-full px-0 btn-md btn-primary md:aspect-auto md:px-4"
 			aria-label="Add Exams"
 			onclick={() => (show = true)}
 		>
-			<Plus />
+			<Plus size={18} />
 			<span class="hidden md:inline">Add Exams</span>
 		</button>
 	</div>
@@ -73,14 +81,7 @@
 						{/each}
 						<td>
 							<div class="flex items-center justify-between gap-3">
-								<span>{truncateByWidth(exam.comments[0]?.title ?? '', 48)}</span>
-								<a
-									class="flex size-5 shrink-0 cursor-pointer items-center justify-center rounded-full text-base-content/60 transition-[background-color,color,box-shadow] duration-200 hover:bg-base-300 hover:text-base-content hover:shadow-sm hover:shadow-black/20 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-primary active:shadow-none motion-reduce:transition-none"
-									href={resolve(`/subjects/${data.subject._id}/comments`)}
-									aria-label={`Edit comments for ${exam.company} ${exam.year}`}
-								>
-									<Pen size={12} />
-								</a>
+								{truncateByWidth(exam.comments[0]?.title ?? '', 48)}
 							</div>
 						</td>
 						<td>
