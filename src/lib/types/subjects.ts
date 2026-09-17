@@ -17,10 +17,12 @@ export interface Exam {
 		sectionScore: number;
 		sectionFullScore: number;
 	}[];
-	comments: {
-		id: string;
-		title: string;
-		updated: string;
-		content: string;
-	}[];
+	comments: Comments[];
+}
+
+export interface Comments {
+	id: string;
+	title: string;
+	updated: string;
+	content: string;
 }
