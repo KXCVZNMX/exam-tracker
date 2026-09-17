@@ -1,12 +1,12 @@
 <script lang="ts">
-	import { Check, FileText, Plus, Search, Save } from '@lucide/svelte';
+	import { Check, FileText, Plus, Search, Save, Trash } from '@lucide/svelte';
 	import { renderMarkdown } from '$lib/util/renderMarkdown';
 	import type { Comments } from '$lib/types/subjects';
 	import type { PageData } from './$types';
 	import AddComment from '$lib/components/modals/AddComment.svelte';
 	import { deserialize } from '$app/forms';
 	import { onMount } from 'svelte';
-	import { beforeNavigate } from '$app/navigation';
+	import {beforeNavigate, invalidateAll} from '$app/navigation';
 
 	type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
 
@@ -17,6 +17,7 @@
 	let searchQuery = $state('');
 	let saveStatus = $state<SaveStatus>('idle');
 	let saveError = $state<string | null>(null);
+	let deleting = $state(false);
 
 	let comments = $derived<Comments[]>(data.subjectComments.flatMap((exam) => exam.comments));
 	let selectedComment = $derived(
@@ -78,6 +79,45 @@
 		} catch (err) {
 			saveStatus = 'error';
 			saveError = err instanceof Error ? err.message : 'Unknown error';
+		}
+	}
+
+	async function deleteComment() {
+		if (!selectedComment || !selectedExamId) return;
+
+		const message = isDirty
+			? 'This comment has unsaved changes. Delete it without saving?'
+			: `Delete "${selectedComment.title}"? This cannot be undone.`;
+
+		if (!confirm(message)) return;
+
+		deleting = true;
+
+		const formData = new FormData();
+		formData.set('commentId', selectedComment.id);
+		// It is guaranteed (hopefully) that subjectComments.length > 0
+		formData.set('examId', selectedExamId);
+
+		try {
+			const res = await fetch(`?/deleteComment`, {
+				method: 'POST',
+				body: formData
+			});
+
+			const result = deserialize(await res.text());
+			if (result.type !== 'success') throw new Error(`Delete failed (${res.status})`);
+
+			const deletedId = selectedComment.id;
+
+			await invalidateAll();
+
+			if (selectedCommentId === deletedId) {
+				selectedCommentId = '';
+			}
+		} catch (e) {
+			throw new Error(`Delete failed: ${(e as Error).message}`, { cause: e });
+		} finally {
+			deleting = false;
 		}
 	}
 
@@ -202,18 +242,33 @@
 					</p>
 					<h2 class="truncate font-semibold">{selectedComment?.title ?? 'New comment'}</h2>
 				</div>
-				<button
-					class="btn gap-1.5 btn-ghost btn-sm"
-					type="button"
-					aria-label="Save comment"
-					onclick={saveComment}
-					disabled={saveStatus === 'saving'}
-				>
-					<Save size={15} />
-					<span class="hidden sm:inline">
-						{saveStatus === 'saving' ? 'Saving…' : 'Save'}
-					</span>
-				</button>
+				<div class="flex items-center gap-1.5">
+					<button
+							class="btn btn-ghost btn-sm text-error hover:bg-error/10 hover:text-error"
+							type="button"
+							aria-label="Delete comment"
+							onclick={deleteComment}
+							disabled={deleting}
+					>
+						<Trash size={15} />
+						<span class="hidden sm:inline">
+							{deleting ? 'Deleting...' : 'Delete'}
+						</span>
+					</button>
+
+					<button
+							class="btn gap-1.5 btn-ghost btn-sm"
+							type="button"
+							aria-label="Save comment"
+							onclick={saveComment}
+							disabled={saveStatus === 'saving'}
+					>
+						<Save size={15} />
+						<span class="hidden sm:inline">
+							{saveStatus === 'saving' ? 'Saving…' : 'Save'}
+						</span>
+					</button>
+				</div>
 			</div>
 			<div
 				class="flex items-center gap-2 border-b border-base-content/10 px-4 py-2 text-xs text-base-content/55"
