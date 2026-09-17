@@ -101,6 +101,10 @@ export const load: PageServerLoad = async ({ params, locals }) => {
 		throw error(404, 'Subject Not Found');
 	}
 
+	if (subjectComments.length === 0) {
+		throw error(400, 'No Exams Found');
+	}
+
 	return {
 		subjectName: subjectName.name,
 		subjectComments,
