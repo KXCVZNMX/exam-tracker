@@ -8,28 +8,48 @@
 	import { onMount } from 'svelte';
 	import { beforeNavigate } from '$app/navigation';
 
+	type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
+
 	let { data }: { data: PageData } = $props();
 
-	let comments = $derived<Comments[]>(data.subjectComments.flatMap((exam) => exam.comments));
 	let showAddComment = $state(false);
 	let selectedCommentId = $state('');
 	let searchQuery = $state('');
+	let saveStatus = $state<SaveStatus>('idle');
+	let saveError = $state<string | null>(null);
+
+	let comments = $derived<Comments[]>(data.subjectComments.flatMap((exam) => exam.comments));
 	let selectedComment = $derived(
 		comments.find((comment) => comment.id === selectedCommentId) ?? comments[0]
 	);
 	let editorContent = $derived(selectedComment?.content ?? '');
-
 	let selectedExamId = $derived(
 		data.subjectComments.find((exam) =>
 			exam.comments.some((comment) => comment.id === selectedComment?.id)
 		)?.examId
 	);
-
 	let renderedMarkdown = $derived(renderMarkdown(editorContent));
+	let isDirty = $derived(editorContent !== (selectedComment?.content ?? ''));
 
-	type SaveStatus = 'idle' | 'saving' | 'saved' | 'error';
-	let saveStatus = $state<SaveStatus>('idle');
-	let saveError = $state<string | null>(null);
+	onMount(() => {
+		function handleBeforeUnload(event: BeforeUnloadEvent) {
+			if (!isDirty) return;
+			event.preventDefault();
+			// Chrome requires returnValue to be set
+			event.returnValue = '';
+		}
+
+		window.addEventListener('beforeunload', handleBeforeUnload);
+		return () => window.removeEventListener('beforeunload', handleBeforeUnload);
+	});
+
+	// Warn on in-app (client-side) navigation
+	beforeNavigate((navigation) => {
+		if (!isDirty) return;
+		if (!confirm('You have unsaved changes. Leave without saving?')) {
+			navigation.cancel();
+		}
+	});
 
 	async function saveComment() {
 		if (!selectedComment || !selectedExamId) return;
@@ -64,28 +84,6 @@
 	function updateContent(event: Event) {
 		editorContent = (event.currentTarget as HTMLTextAreaElement).value;
 	}
-
-	let isDirty = $derived(editorContent !== (selectedComment?.content ?? ''));
-
-	onMount(() => {
-		function handleBeforeUnload(event: BeforeUnloadEvent) {
-			if (!isDirty) return;
-			event.preventDefault();
-			// Chrome requires returnValue to be set
-			event.returnValue = '';
-		}
-
-		window.addEventListener('beforeunload', handleBeforeUnload);
-		return () => window.removeEventListener('beforeunload', handleBeforeUnload);
-	});
-
-	// Warn on in-app (client-side) navigation
-	beforeNavigate((navigation) => {
-		if (!isDirty) return;
-		if (!confirm('You have unsaved changes. Leave without saving?')) {
-			navigation.cancel();
-		}
-	});
 
 	function selectComment(id: string) {
 		if (isDirty && !confirm('Discard unsaved changes?')) return;
