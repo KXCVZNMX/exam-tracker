@@ -24,7 +24,7 @@ export const actions: Actions = {
 		const numSectionsParsed = parseInt(numSections, 10);
 
 		if (Number.isNaN(numSectionsParsed) || numSectionsParsed > 4 || numSectionsParsed < 1) {
-			throw error(403, "Subject Sections should be between 1 to 4 and not NaN")
+			throw error(403, 'Subject Sections should be between 1 to 4 and not NaN');
 		}
 
 		await db.collection<SubjectsContent>('subjects').insertOne({
