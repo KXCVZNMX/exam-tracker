@@ -30,6 +30,14 @@ export const actions: Actions = {
 			throw error(400, 'Invalid exam details');
 		}
 
+		if (year < 1980 || year > 3000) {
+			throw error(403, 'Year should be in between 1980 to 3000');
+		}
+
+		if (sectionCount < 1 || sectionCount > 4 || Number.isNaN(sectionCount)) {
+			throw error(403, 'Section Count should be in between 1 to 4 and not NaN');
+		}
+
 		const sections: Exam['sections'] = [];
 		for (let i = 0; i < sectionCount; i += 1) {
 			const sectionScore = Number(data.get(`mark_${i}`));

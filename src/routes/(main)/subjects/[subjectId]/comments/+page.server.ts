@@ -23,6 +23,10 @@ export const actions: Actions = {
 		const title = (data.get('title') ?? 'Untitled Comment').toString().trim();
 		if (!examName) throw error(400, 'ExamId is required');
 
+		if (title.length > 50) {
+			throw error(403, 'Title length needs to be lower than 50');
+		}
+
 		const newComment: Comments = {
 			id: new ObjectId().toString(),
 			title,

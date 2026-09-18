@@ -1,7 +1,7 @@
 import { error, type Actions, redirect } from '@sveltejs/kit';
 import db from '$lib/server/mongodb';
 import type { SubjectsContent } from '$lib/types/subjects';
-import type { PageServerLoad } from '../../../../.svelte-kit/types/src/routes/(main)/subjects/$types';
+import type { PageServerLoad } from './$types';
 import { deleteSubject } from '$lib/server/actions/subjects';
 import { ObjectId } from 'mongodb';
 
@@ -19,6 +19,12 @@ export const actions: Actions = {
 
 		if (!name || !numSections) {
 			throw error(400, 'Subject name and sections are required');
+		}
+
+		const numSectionsParsed = parseInt(numSections, 10);
+
+		if (Number.isNaN(numSectionsParsed) || numSectionsParsed > 4 || numSectionsParsed < 1) {
+			throw error(403, "Subject Sections should be between 1 to 4 and not NaN")
 		}
 
 		await db.collection<SubjectsContent>('subjects').insertOne({
