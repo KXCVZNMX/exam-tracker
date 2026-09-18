@@ -45,6 +45,12 @@ export const actions: Actions = {
 			throw error(400, 'Subject name, subject Id and sections are required');
 		}
 
+		const numSectionsParsed = parseInt(numSections, 10);
+
+		if (numSectionsParsed > 4 || numSectionsParsed < 1) {
+			throw error(403, 'Sections num should be between 1 to 4');
+		}
+
 		await db.collection<SubjectsContent>('subjects').updateOne(
 			{
 				_id: new ObjectId(subjectId),
