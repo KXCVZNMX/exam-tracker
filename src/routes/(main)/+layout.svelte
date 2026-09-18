@@ -21,7 +21,7 @@
 					onclick={() => (drawerOpen = false)}><X /></button
 				>
 			</div>
-			<Sidebar class="sticky!" />
+			<Sidebar class="sticky! h-[93%]! min-h-0 flex-1" />
 		</div>
 	{/if}
 	<main class="min-w-0 flex-1 pt-5 md:pl-5">
