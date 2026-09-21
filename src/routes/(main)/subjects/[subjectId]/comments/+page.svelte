@@ -126,6 +126,7 @@
 
 	function updateContent(event: Event) {
 		editorContent = (event.currentTarget as HTMLTextAreaElement).value;
+		if (isDirty) saveStatus = 'idle';
 	}
 
 	function selectComment(id: string) {
